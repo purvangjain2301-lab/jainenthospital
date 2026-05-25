@@ -1,8 +1,11 @@
-import { createFileRoute } from "@tanstack/react-router";
-import { useState } from "react";
+import { createFileRoute, Link } from "@tanstack/react-router";
+import { useState, useEffect } from "react";
 import { SiteLayout, PageHero } from "@/components/site/SiteLayout";
 import { CLINIC, telPrimary, waLink } from "@/lib/clinic";
-import { CheckCircle2, MessageCircle, Phone, Calendar, Clock, IndianRupee, CreditCard, ArrowLeft, ExternalLink } from "lucide-react";
+import {
+  CheckCircle2, MessageCircle, Phone, Calendar, Clock, IndianRupee,
+  CreditCard, ArrowLeft, ExternalLink, Ticket, Users,
+} from "lucide-react";
 import { supabase } from "@/lib/supabase";
 
 export const Route = createFileRoute("/book")({
@@ -19,54 +22,107 @@ export const Route = createFileRoute("/book")({
   component: Book,
 });
 
-const SLOTS = ["10:00 AM", "11:00 AM", "12:00 PM", "01:00 PM", "04:00 PM", "05:00 PM", "06:00 PM"];
-// Razorpay Payment Page (₹500 consultation fee)
+const DEFAULT_SLOTS = ["10:00 AM", "11:00 AM", "12:00 PM", "01:00 PM", "04:00 PM", "05:00 PM", "06:00 PM"];
 const RAZORPAY_PAYMENT_LINK = "https://rzp.io/rzp/3hpqLFJU";
-
+const MAX_CAPACITY = 1000;
 
 type Step = "form" | "payment" | "done";
+type SlotInfo = { time_label: string; max_capacity: number; is_blocked: boolean; booked: number };
 
 function Book() {
   const [step, setStep] = useState<Step>("form");
   const [form, setForm] = useState({
-    name: "", age: "", phone: "", date: "", slot: "", concern: "", mode: "Clinic Visit",
+    name: "", age: "", phone: "", email: "", date: "", slot: "", concern: "", mode: "Clinic Visit",
   });
   const [submitting, setSubmitting] = useState(false);
   const [apptId, setApptId] = useState<string | null>(null);
+  const [token, setToken] = useState<number | null>(null);
   const [error, setError] = useState("");
+  const [slotInfo, setSlotInfo] = useState<SlotInfo[]>([]);
+  const [loadingSlots, setLoadingSlots] = useState(false);
 
   const valid = form.name && form.phone && form.date && form.slot && form.concern;
 
-  // Step 1 → save appointment as pending, move to payment step
+  // Load slots whenever date changes
+  useEffect(() => {
+    if (!form.date) { setSlotInfo([]); return; }
+    let cancelled = false;
+    (async () => {
+      setLoadingSlots(true);
+      const [{ data: customSlots }, { data: appts }] = await Promise.all([
+        supabase.from("slots").select("time_label, max_capacity, is_blocked").eq("date", form.date),
+        supabase
+          .from("appointments")
+          .select("slot")
+          .eq("date", form.date)
+          .neq("status", "cancelled"),
+      ]);
+      if (cancelled) return;
+
+      const labels = customSlots && customSlots.length > 0
+        ? customSlots.map((s: any) => s.time_label)
+        : DEFAULT_SLOTS;
+
+      const info: SlotInfo[] = labels.map((label) => {
+        const custom = customSlots?.find((s: any) => s.time_label === label);
+        const booked = (appts ?? []).filter((a: any) => a.slot === label).length;
+        return {
+          time_label: label,
+          max_capacity: custom?.max_capacity ?? MAX_CAPACITY,
+          is_blocked: custom?.is_blocked ?? false,
+          booked,
+        };
+      });
+      setSlotInfo(info);
+      setLoadingSlots(false);
+    })();
+    return () => { cancelled = true; };
+  }, [form.date]);
+
   async function submitForm(e: React.FormEvent) {
     e.preventDefault();
     if (!valid) return;
     setSubmitting(true);
     setError("");
 
+    // Allocate token using DB function
+    const { data: tokenData, error: tokenErr } = await supabase
+      .rpc("allocate_token", { _date: form.date, _slot: form.slot });
+    if (tokenErr) {
+      setError(tokenErr.message); setSubmitting(false); return;
+    }
+    const newToken = tokenData as number;
+
+    const { data: userData } = await supabase.auth.getUser();
+
     const { data, error: dbErr } = await supabase
       .from("appointments")
       .insert({
+        user_id:        userData.user?.id ?? null,
         name:           form.name,
         age:            form.age || null,
         phone:          form.phone,
+        email:          form.email || null,
         mode:           form.mode,
         date:           form.date,
         slot:           form.slot,
         concern:        form.concern,
         status:         "pending",
         payment_status: "unpaid",
+        token_number:   newToken,
       })
       .select("id")
       .single();
 
     setSubmitting(false);
     if (dbErr) { setError(dbErr.message); return; }
-    if (data) setApptId(data.id);
+    if (data) {
+      setApptId((data as { id: string }).id);
+      setToken(newToken);
+    }
     setStep("payment");
   }
 
-  // Step 2 → open Razorpay payment page, then send WhatsApp confirmation
   function payNow() {
     window.open(RAZORPAY_PAYMENT_LINK, "_blank", "noopener,noreferrer");
   }
@@ -78,13 +134,13 @@ function Book() {
       `Phone: ${form.phone}`,
       `Mode: ${form.mode}`,
       `Date: ${form.date}  Slot: ${form.slot}`,
+      token ? `Token Number: ${token}` : "",
       `Concern: ${form.concern}`,
       `Payment: ₹500 paid via Razorpay${apptId ? `  (Ref: ${apptId.slice(0,8)})` : ""}`,
-    ].join("\n");
+    ].filter(Boolean).join("\n");
     window.open(waLink(msg), "_blank", "noopener,noreferrer");
     setStep("done");
   }
-
 
   return (
     <SiteLayout>
@@ -96,10 +152,8 @@ function Book() {
 
       <section className="py-14">
         <div className="container-tight grid lg:grid-cols-12 gap-10">
-          {/* ── Main area ── */}
           <div className="lg:col-span-7">
 
-            {/* STEP 1 — Form */}
             {step === "form" && (
               <form onSubmit={submitForm} className="rounded-2xl bg-white ring-1 ring-border p-6 sm:p-8 shadow-soft space-y-5">
                 <div className="grid sm:grid-cols-2 gap-4">
@@ -115,6 +169,10 @@ function Book() {
                     <input required value={form.phone} onChange={e => setForm({ ...form, phone: e.target.value })}
                       className="input" placeholder="+91" type="tel" />
                   </Field>
+                  <Field label="Email (optional)">
+                    <input value={form.email} onChange={e => setForm({ ...form, email: e.target.value })}
+                      className="input" placeholder="you@example.com" type="email" />
+                  </Field>
                   <Field label="Consultation mode">
                     <select value={form.mode} onChange={e => setForm({ ...form, mode: e.target.value })} className="input">
                       <option>Clinic Visit</option>
@@ -123,28 +181,61 @@ function Book() {
                   </Field>
                   <Field label="Preferred date" required>
                     <input required type="date" value={form.date} min={new Date().toISOString().slice(0, 10)}
-                      onChange={e => setForm({ ...form, date: e.target.value })} className="input" />
-                  </Field>
-                  <Field label="Preferred slot" required>
-                    <select required value={form.slot} onChange={e => setForm({ ...form, slot: e.target.value })} className="input">
-                      <option value="">Select slot…</option>
-                      {SLOTS.map(s => <option key={s}>{s}</option>)}
-                    </select>
+                      onChange={e => setForm({ ...form, date: e.target.value, slot: "" })} className="input" />
                   </Field>
                 </div>
+
+                {form.date && (
+                  <div>
+                    <span className="text-sm font-medium text-foreground">Preferred slot <span className="text-crimson">*</span></span>
+                    {loadingSlots ? (
+                      <p className="text-xs text-muted-foreground mt-2">Loading slot availability…</p>
+                    ) : (
+                      <div className="mt-2 grid grid-cols-2 sm:grid-cols-3 gap-2">
+                        {slotInfo.map(s => {
+                          const full = s.booked >= s.max_capacity;
+                          const disabled = full || s.is_blocked;
+                          const selected = form.slot === s.time_label;
+                          return (
+                            <button
+                              key={s.time_label}
+                              type="button"
+                              disabled={disabled}
+                              onClick={() => setForm({ ...form, slot: s.time_label })}
+                              className={`rounded-xl border px-3 py-2.5 text-left transition ${
+                                selected ? "border-crimson bg-crimson/5 ring-1 ring-crimson"
+                                : disabled ? "border-border bg-muted/40 opacity-50 cursor-not-allowed"
+                                : "border-border bg-white hover:border-primary"
+                              }`}
+                            >
+                              <div className="text-sm font-semibold text-primary">{s.time_label}</div>
+                              <div className="text-[11px] text-muted-foreground flex items-center gap-1">
+                                <Users className="h-3 w-3" />
+                                {s.is_blocked ? "Blocked" : full ? "Full" : `${s.booked}/${s.max_capacity}`}
+                              </div>
+                            </button>
+                          );
+                        })}
+                      </div>
+                    )}
+                  </div>
+                )}
+
                 <Field label="Briefly describe your concern" required>
                   <textarea required rows={4} value={form.concern} onChange={e => setForm({ ...form, concern: e.target.value })}
                     className="input resize-none" placeholder="e.g. Right ear has been blocked for 2 weeks with mild pain." />
                 </Field>
-                <button type="submit" disabled={!valid}
+
+                {error && <p className="text-xs text-red-500">{error}</p>}
+
+                <button type="submit" disabled={!valid || submitting}
                   className="inline-flex w-full sm:w-auto items-center justify-center gap-2 rounded-full bg-crimson px-7 py-3.5 text-sm font-semibold text-crimson-foreground disabled:opacity-50">
-                  <MessageCircle className="h-4 w-4" /> Continue to payment
+                  <MessageCircle className="h-4 w-4" /> {submitting ? "Reserving…" : "Continue to payment"}
                 </button>
                 <p className="text-xs text-muted-foreground">Sunday closed. Emergencies: call {CLINIC.phones.primary} (24×7).</p>
               </form>
             )}
 
-            {/* STEP 2 — Payment */}
             {step === "payment" && (
               <div className="rounded-2xl bg-white ring-1 ring-border p-8 shadow-soft">
                 <div className="inline-flex items-center justify-center h-12 w-12 rounded-2xl bg-crimson/10 text-crimson mb-4">
@@ -155,11 +246,17 @@ function Book() {
                   Your slot will be reserved once the payment is complete.
                 </p>
 
-                {/* Summary */}
+                {token !== null && (
+                  <div className="mt-4 inline-flex items-center gap-2 rounded-full bg-emerald-50 text-emerald-700 px-4 py-2 text-sm font-semibold">
+                    <Ticket className="h-4 w-4" /> Your token number: <span className="text-lg">#{token}</span>
+                  </div>
+                )}
+
                 <div className="mt-5 rounded-xl bg-[oklch(0.97_0.01_268)] ring-1 ring-border p-5 space-y-1.5 text-sm">
                   <Row k="Patient"  v={form.name} />
                   <Row k="Date"     v={`${form.date} · ${form.slot}`} />
                   <Row k="Mode"     v={form.mode} />
+                  {token !== null && <Row k="Token #"  v={String(token)} />}
                   <div className="border-t border-border pt-2 mt-2 flex justify-between font-bold text-primary">
                     <span>Consultation fee</span>
                     <span className="text-crimson text-lg">₹500</span>
@@ -190,15 +287,18 @@ function Book() {
                 <p className="mt-3 text-xs text-muted-foreground">
                   After completing payment in the Razorpay window, tap <b>"I've paid"</b> so the clinic receives your confirmation on WhatsApp instantly.
                 </p>
-
               </div>
             )}
 
-            {/* STEP 3 — Done */}
             {step === "done" && (
               <div className="rounded-2xl bg-white ring-1 ring-border p-8 shadow-soft">
                 <CheckCircle2 className="h-10 w-10 text-emerald-500" />
                 <h2 className="font-display text-2xl font-bold text-primary mt-3">Appointment confirmed!</h2>
+                {token !== null && (
+                  <p className="mt-2 text-base text-primary">
+                    Your token: <b>#{token}</b> · {form.date} · {form.slot}
+                  </p>
+                )}
                 <p className="text-muted-foreground mt-2 text-sm">
                   Payment received · ₹500. We've sent a WhatsApp confirmation. Our team will reach you
                   within clinic hours ({CLINIC.hours.weekdays}).
@@ -208,7 +308,11 @@ function Book() {
                     className="inline-flex items-center gap-2 rounded-full bg-primary px-5 py-2.5 text-sm font-semibold text-primary-foreground">
                     <Phone className="h-4 w-4" /> Call {CLINIC.phones.primary}
                   </a>
-                  <button onClick={() => { setStep("form"); setForm({ name:"", age:"", phone:"", date:"", slot:"", concern:"", mode:"Clinic Visit" }); }}
+                  <Link to="/my-appointments"
+                    className="inline-flex items-center gap-2 rounded-full ring-1 ring-border px-5 py-2.5 text-sm font-semibold">
+                    My Appointments
+                  </Link>
+                  <button onClick={() => { setStep("form"); setToken(null); setApptId(null); setForm({ name:"", age:"", phone:"", email:"", date:"", slot:"", concern:"", mode:"Clinic Visit" }); }}
                     className="inline-flex items-center gap-2 rounded-full ring-1 ring-border px-5 py-2.5 text-sm font-semibold">
                     New booking
                   </button>
@@ -217,13 +321,12 @@ function Book() {
             )}
           </div>
 
-          {/* Sidebar */}
           <aside className="lg:col-span-5 space-y-5">
             <div className="rounded-2xl bg-primary text-primary-foreground p-6">
               <h3 className="font-display text-xl font-bold">How it works</h3>
               <ol className="mt-4 space-y-3 text-sm opacity-95">
-                <li className="flex gap-3"><Step n={1} /> Fill in your details above.</li>
-                <li className="flex gap-3"><Step n={2} /> Review your booking summary.</li>
+                <li className="flex gap-3"><Step n={1} /> Fill in your details and pick an available slot.</li>
+                <li className="flex gap-3"><Step n={2} /> Get an instant token number.</li>
                 <li className="flex gap-3"><Step n={3} /> Pay ₹500 securely via Razorpay — slot locked instantly.</li>
                 <li className="flex gap-3"><Step n={4} /> Visit clinic or connect via video on the day.</li>
               </ol>
@@ -232,6 +335,7 @@ function Book() {
               <div className="flex items-center gap-3"><Calendar className="h-4 w-4 text-crimson" /> {CLINIC.hours.weekdays}</div>
               <div className="flex items-center gap-3"><Clock    className="h-4 w-4 text-crimson" /> {CLINIC.hours.sunday}</div>
               <div className="flex items-center gap-3"><IndianRupee className="h-4 w-4 text-crimson" /> ₹500 — shown only at payment step</div>
+              <div className="flex items-center gap-3"><Ticket className="h-4 w-4 text-crimson" /> Token issued instantly on booking</div>
             </div>
             <a href={`tel:${telPrimary}`}
               className="block rounded-2xl bg-crimson text-crimson-foreground p-5 text-center font-semibold">
