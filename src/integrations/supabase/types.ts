@@ -14,171 +14,16 @@ export type Database = {
   }
   public: {
     Tables: {
-      appointments: {
-        Row: {
-          age: string | null
-          concern: string
-          created_at: string
-          date: string
-          email: string | null
-          id: string
-          mode: string
-          name: string
-          payment_status: string
-          phone: string
-          razorpay_order_id: string | null
-          slot: string
-          status: string
-        }
-        Insert: {
-          age?: string | null
-          concern: string
-          created_at?: string
-          date: string
-          email?: string | null
-          id?: string
-          mode?: string
-          name: string
-          payment_status?: string
-          phone: string
-          razorpay_order_id?: string | null
-          slot: string
-          status?: string
-        }
-        Update: {
-          age?: string | null
-          concern?: string
-          created_at?: string
-          date?: string
-          email?: string | null
-          id?: string
-          mode?: string
-          name?: string
-          payment_status?: string
-          phone?: string
-          razorpay_order_id?: string | null
-          slot?: string
-          status?: string
-        }
-        Relationships: []
-      }
-      blog_posts: {
-        Row: {
-          category: string
-          content: string | null
-          created_at: string
-          excerpt: string | null
-          id: string
-          published: boolean
-          slug: string
-          title: string
-        }
-        Insert: {
-          category: string
-          content?: string | null
-          created_at?: string
-          excerpt?: string | null
-          id?: string
-          published?: boolean
-          slug: string
-          title: string
-        }
-        Update: {
-          category?: string
-          content?: string | null
-          created_at?: string
-          excerpt?: string | null
-          id?: string
-          published?: boolean
-          slug?: string
-          title?: string
-        }
-        Relationships: []
-      }
-      contact_messages: {
-        Row: {
-          created_at: string
-          email: string | null
-          id: string
-          message: string
-          name: string
-          phone: string | null
-        }
-        Insert: {
-          created_at?: string
-          email?: string | null
-          id?: string
-          message: string
-          name: string
-          phone?: string | null
-        }
-        Update: {
-          created_at?: string
-          email?: string | null
-          id?: string
-          message?: string
-          name?: string
-          phone?: string | null
-        }
-        Relationships: []
-      }
-      gallery: {
-        Row: {
-          created_at: string
-          id: string
-          label: string
-          url: string
-        }
-        Insert: {
-          created_at?: string
-          id?: string
-          label: string
-          url: string
-        }
-        Update: {
-          created_at?: string
-          id?: string
-          label?: string
-          url?: string
-        }
-        Relationships: []
-      }
-      user_roles: {
-        Row: {
-          created_at: string
-          id: string
-          role: Database["public"]["Enums"]["app_role"]
-          user_id: string
-        }
-        Insert: {
-          created_at?: string
-          id?: string
-          role: Database["public"]["Enums"]["app_role"]
-          user_id: string
-        }
-        Update: {
-          created_at?: string
-          id?: string
-          role?: Database["public"]["Enums"]["app_role"]
-          user_id?: string
-        }
-        Relationships: []
-      }
+      [_ in never]: never
     }
     Views: {
       [_ in never]: never
     }
     Functions: {
-      has_role: {
-        Args: {
-          _role: Database["public"]["Enums"]["app_role"]
-          _user_id: string
-        }
-        Returns: boolean
-      }
+      [_ in never]: never
     }
     Enums: {
-      app_role: "admin"
+      [_ in never]: never
     }
     CompositeTypes: {
       [_ in never]: never
@@ -305,8 +150,6 @@ export type CompositeTypes<
 
 export const Constants = {
   public: {
-    Enums: {
-      app_role: ["admin"],
-    },
+    Enums: {},
   },
 } as const
