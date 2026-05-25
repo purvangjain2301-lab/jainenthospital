@@ -14,6 +14,7 @@ import { Route as SitemapDotxmlRouteImport } from './routes/sitemap[.]xml'
 import { Route as ServicesRouteImport } from './routes/services'
 import { Route as PharmacyRouteImport } from './routes/pharmacy'
 import { Route as PatientInfoRouteImport } from './routes/patient-info'
+import { Route as MyAppointmentsRouteImport } from './routes/my-appointments'
 import { Route as GalleryRouteImport } from './routes/gallery'
 import { Route as ContactRouteImport } from './routes/contact'
 import { Route as BookRouteImport } from './routes/book'
@@ -45,6 +46,11 @@ const PharmacyRoute = PharmacyRouteImport.update({
 const PatientInfoRoute = PatientInfoRouteImport.update({
   id: '/patient-info',
   path: '/patient-info',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const MyAppointmentsRoute = MyAppointmentsRouteImport.update({
+  id: '/my-appointments',
+  path: '/my-appointments',
   getParentRoute: () => rootRouteImport,
 } as any)
 const GalleryRoute = GalleryRouteImport.update({
@@ -91,6 +97,7 @@ export interface FileRoutesByFullPath {
   '/book': typeof BookRoute
   '/contact': typeof ContactRoute
   '/gallery': typeof GalleryRoute
+  '/my-appointments': typeof MyAppointmentsRoute
   '/patient-info': typeof PatientInfoRoute
   '/pharmacy': typeof PharmacyRoute
   '/services': typeof ServicesRoute
@@ -105,6 +112,7 @@ export interface FileRoutesByTo {
   '/book': typeof BookRoute
   '/contact': typeof ContactRoute
   '/gallery': typeof GalleryRoute
+  '/my-appointments': typeof MyAppointmentsRoute
   '/patient-info': typeof PatientInfoRoute
   '/pharmacy': typeof PharmacyRoute
   '/services': typeof ServicesRoute
@@ -120,6 +128,7 @@ export interface FileRoutesById {
   '/book': typeof BookRoute
   '/contact': typeof ContactRoute
   '/gallery': typeof GalleryRoute
+  '/my-appointments': typeof MyAppointmentsRoute
   '/patient-info': typeof PatientInfoRoute
   '/pharmacy': typeof PharmacyRoute
   '/services': typeof ServicesRoute
@@ -136,6 +145,7 @@ export interface FileRouteTypes {
     | '/book'
     | '/contact'
     | '/gallery'
+    | '/my-appointments'
     | '/patient-info'
     | '/pharmacy'
     | '/services'
@@ -150,6 +160,7 @@ export interface FileRouteTypes {
     | '/book'
     | '/contact'
     | '/gallery'
+    | '/my-appointments'
     | '/patient-info'
     | '/pharmacy'
     | '/services'
@@ -164,6 +175,7 @@ export interface FileRouteTypes {
     | '/book'
     | '/contact'
     | '/gallery'
+    | '/my-appointments'
     | '/patient-info'
     | '/pharmacy'
     | '/services'
@@ -179,6 +191,7 @@ export interface RootRouteChildren {
   BookRoute: typeof BookRoute
   ContactRoute: typeof ContactRoute
   GalleryRoute: typeof GalleryRoute
+  MyAppointmentsRoute: typeof MyAppointmentsRoute
   PatientInfoRoute: typeof PatientInfoRoute
   PharmacyRoute: typeof PharmacyRoute
   ServicesRoute: typeof ServicesRoute
@@ -221,6 +234,13 @@ declare module '@tanstack/react-router' {
       path: '/patient-info'
       fullPath: '/patient-info'
       preLoaderRoute: typeof PatientInfoRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/my-appointments': {
+      id: '/my-appointments'
+      path: '/my-appointments'
+      fullPath: '/my-appointments'
+      preLoaderRoute: typeof MyAppointmentsRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/gallery': {
@@ -283,6 +303,7 @@ const rootRouteChildren: RootRouteChildren = {
   BookRoute: BookRoute,
   ContactRoute: ContactRoute,
   GalleryRoute: GalleryRoute,
+  MyAppointmentsRoute: MyAppointmentsRoute,
   PatientInfoRoute: PatientInfoRoute,
   PharmacyRoute: PharmacyRoute,
   ServicesRoute: ServicesRoute,
@@ -292,3 +313,13 @@ const rootRouteChildren: RootRouteChildren = {
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
   ._addFileTypes<FileRouteTypes>()
+
+import type { getRouter } from './router.tsx'
+import type { startInstance } from './start.ts'
+declare module '@tanstack/react-start' {
+  interface Register {
+    ssr: true
+    router: Awaited<ReturnType<typeof getRouter>>
+    config: Awaited<ReturnType<typeof startInstance.getOptions>>
+  }
+}
