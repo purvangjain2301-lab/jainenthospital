@@ -27,6 +27,7 @@ export type BlogPostDraft = Omit<BlogPost, "id" | "created_at">;
 
 export interface Appointment {
   id: string;
+  user_id?: string | null;
   name: string;
   age: string | null;
   phone: string;
@@ -38,6 +39,16 @@ export interface Appointment {
   status: string;
   payment_status: string;
   razorpay_order_id?: string | null;
+  token_number?: number | null;
+  created_at: string;
+}
+
+export interface Slot {
+  id: string;
+  date: string;
+  time_label: string;
+  max_capacity: number;
+  is_blocked: boolean;
   created_at: string;
 }
 
