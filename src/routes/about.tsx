@@ -35,6 +35,8 @@ function About() {
               <h2 className="mt-4 font-display text-2xl font-bold text-primary">{CLINIC.doctor.name}</h2>
               <p className="text-sm text-muted-foreground">{CLINIC.doctor.creds}</p>
               <p className="text-sm mt-1">{CLINIC.doctor.title}</p>
+              <p className="text-sm mt-1 font-semibold text-crimson">Head & Neck Cancer Surgeon</p>
+
               <div className="mt-5 space-y-2 text-sm">
                 <div className="flex items-center gap-2"><Award className="h-4 w-4 text-crimson" /> 17+ years experience</div>
                 <div className="flex items-center gap-2"><GraduationCap className="h-4 w-4 text-crimson" /> MBBS, MS — ENT</div>
@@ -50,14 +52,19 @@ function About() {
               <p className="mt-3 text-muted-foreground leading-relaxed">
                 {CLINIC.doctor.bio}
               </p>
+              <p className="mt-3 text-muted-foreground leading-relaxed">
+                As a practising <strong>Head & Neck Cancer Surgeon</strong>, Dr. Jain has built deep experience in the diagnosis, surgical treatment, and long-term follow-up of oral, throat, laryngeal, thyroid, and salivary gland cancers. From early-stage detection through complex resections, reconstructive procedures, and coordinated chemo-radiation planning, patients receive end-to-end oncology care under one roof.
+              </p>
             </article>
+
 
             <div className="grid sm:grid-cols-2 gap-5">
               {[
                 { icon: GraduationCap, t: "Academic excellence", d: "MBBS followed by MS in ENT. Continues to teach and mentor postgraduates at Banas Medical College." },
-                { icon: Microscope, t: "Surgical expertise", d: "Endoscopic sinus surgery, ear microsurgery, head and neck oncology procedures, and advanced airway care." },
-                { icon: Stethoscope, t: "Clinical breadth", d: "From routine ENT complaints to complex referral cases — every patient receives the same evidence-based attention." },
+                { icon: Microscope, t: "Cancer surgery experience", d: "Years of focused practice in head & neck oncology — oral, throat, laryngeal, thyroid and salivary gland cancers, including reconstructive procedures." },
+                { icon: Stethoscope, t: "Surgical expertise", d: "Endoscopic sinus surgery, ear microsurgery, advanced airway care, and complex referral cases." },
                 { icon: Users, t: "Community-first", d: "Dedicated to serving Deesa and the wider Banaskantha region with affordable, accessible specialist care." },
+
               ].map((b) => (
                 <div key={b.t} className="rounded-2xl ring-1 ring-border p-6 bg-white">
                   <b.icon className="h-7 w-7 text-crimson" />
