@@ -93,12 +93,17 @@ function Book() {
     }
     const newToken = tokenData as number;
 
-    const { data: userData } = await supabase.auth.getUser();
+    // Ensure we have a session (anon or real) so RLS insert policy is satisfied
+let { data: userData } = await supabase.auth.getUser();
+if (!userData.user) {
+  const { data: anonData } = await supabase.auth.signInAnonymously();
+  userData = { user: anonData.user };
+}
 
-    const { data, error: dbErr } = await supabase
-      .from("appointments")
-      .insert({
-        user_id:        userData.user?.id ?? null,
+const { data, error: dbErr } = await supabase
+  .from("appointments")
+  .insert({
+    user_id: userData.user?.id ?? null,
         name:           form.name,
         age:            form.age || null,
         phone:          form.phone,
