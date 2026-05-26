@@ -71,10 +71,9 @@ function HomePage() {
                 <Phone className="h-4 w-4" /> {CLINIC.phones.primary}
               </a>
             </motion.div>
-            <div className="mt-8 grid grid-cols-3 gap-3 max-w-md">
+            <div className="mt-8 grid grid-cols-2 gap-3 max-w-md">
               {[
                 { k: "17+", v: "Years Exp." },
-                { k: "10k+", v: "Patients Treated" },
                 { k: "24×7", v: "Emergency" },
               ].map((s) => (
                 <div key={s.v} className="rounded-xl bg-white/70 ring-1 ring-border p-3 text-center">
