@@ -69,7 +69,7 @@ function Contact() {
             <div className="rounded-2xl overflow-hidden ring-1 ring-border bg-white">
               <iframe
                 title="Jain ENT Hospital location"
-                src="https://www.google.com/maps?q=Iskcon+Pride+Deesa+Highway+Deesa+Gujarat&output=embed"
+                src="https://www.google.com/maps?q=24.2724378,72.1794694&output=embed"
                 className="w-full h-80 border-0"
                 loading="lazy"
                 referrerPolicy="no-referrer-when-downgrade"
