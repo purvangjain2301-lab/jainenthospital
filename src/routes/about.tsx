@@ -35,6 +35,8 @@ function About() {
               <h2 className="mt-4 font-display text-2xl font-bold text-primary">{CLINIC.doctor.name}</h2>
               <p className="text-sm text-muted-foreground">{CLINIC.doctor.creds}</p>
               <p className="text-sm mt-1">{CLINIC.doctor.title}</p>
+              <p className="text-sm mt-1 font-semibold text-crimson">Head & Neck Cancer Surgeon</p>
+
               <div className="mt-5 space-y-2 text-sm">
                 <div className="flex items-center gap-2"><Award className="h-4 w-4 text-crimson" /> 17+ years experience</div>
                 <div className="flex items-center gap-2"><GraduationCap className="h-4 w-4 text-crimson" /> MBBS, MS — ENT</div>
