@@ -99,6 +99,7 @@ function HomePage() {
                       <div className="text-xs uppercase tracking-wider opacity-80">Consult with</div>
                       <div className="font-display text-2xl font-bold leading-tight">{CLINIC.doctor.name}</div>
                       <div className="text-sm opacity-90">{CLINIC.doctor.creds}</div>
+                      <div className="text-sm font-semibold text-crimson-foreground/90">Cancer Surgeon</div>
                     </div>
                   </div>
                 </div>

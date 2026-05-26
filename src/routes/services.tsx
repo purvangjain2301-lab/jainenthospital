@@ -49,6 +49,10 @@ const GROUPS = [
     icon: AlertTriangle, title: "ENT Emergencies (24×7)",
     items: ["Sudden hearing loss", "Severe nose-bleed", "Foreign body in ear / nose / throat", "Acute airway obstruction", "Facial trauma — ENT component"],
   },
+  {
+    icon: Microscope, title: "Cancer Surgery",
+    items: ["Head & neck tumour excision", "Thyroid cancer surgery", "Oral cavity cancer surgery", "Laryngeal cancer procedures", "Reconstructive surgery post-oncology", "Post-operative cancer rehabilitation"],
+  },
 ];
 
 function Services() {
