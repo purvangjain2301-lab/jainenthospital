@@ -233,6 +233,7 @@ function Book() {
                   <MessageCircle className="h-4 w-4" /> {submitting ? "Reserving…" : "Continue to payment"}
                 </button>
                 <p className="text-xs text-muted-foreground">Sunday closed. Emergencies: call {CLINIC.phones.primary} (24×7).</p>
+               <p className="text-xs text-muted-foreground"> Prefer to Call if slot not AVAILABLE / FOUND  {CLINIC.phones.primary} (24×7).</p>
               </form>
             )}
 
@@ -339,7 +340,7 @@ function Book() {
             </div>
             <a href={`tel:${telPrimary}`}
               className="block rounded-2xl bg-crimson text-crimson-foreground p-5 text-center font-semibold">
-              Prefer to call? {CLINIC.phones.primary}
+              Prefer to call? /  {CLINIC.phones.primary}
             </a>
           </aside>
         </div>
