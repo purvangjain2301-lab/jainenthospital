@@ -52,7 +52,11 @@ function About() {
               <p className="mt-3 text-muted-foreground leading-relaxed">
                 {CLINIC.doctor.bio}
               </p>
+              <p className="mt-3 text-muted-foreground leading-relaxed">
+                As a practising <strong>Head & Neck Cancer Surgeon</strong>, Dr. Jain has built deep experience in the diagnosis, surgical treatment, and long-term follow-up of oral, throat, laryngeal, thyroid, and salivary gland cancers. From early-stage detection through complex resections, reconstructive procedures, and coordinated chemo-radiation planning, patients receive end-to-end oncology care under one roof.
+              </p>
             </article>
+
 
             <div className="grid sm:grid-cols-2 gap-5">
               {[
