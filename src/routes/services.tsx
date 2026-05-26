@@ -95,7 +95,33 @@ function Services() {
           ))}
         </div>
 
+        <div className="container-tight mt-16">
+          <div className="rounded-2xl ring-1 ring-border bg-white p-7 md:p-10">
+            <div className="flex items-center gap-3">
+              <div className="inline-flex h-11 w-11 items-center justify-center rounded-xl bg-crimson/10 text-crimson">
+                <Microscope className="h-5 w-5" />
+              </div>
+              <div>
+                <p className="text-xs uppercase tracking-widest text-muted-foreground">FAQs</p>
+                <h2 className="font-display text-2xl font-bold text-primary">Cancer Surgery — Common Questions</h2>
+              </div>
+            </div>
+            <p className="mt-3 text-sm text-muted-foreground max-w-2xl">
+              Answers to the questions patients and families most often ask about head & neck cancer diagnosis, surgery, and post-operative recovery.
+            </p>
+            <Accordion type="single" collapsible className="mt-6">
+              {CANCER_FAQ.map((f, i) => (
+                <AccordionItem key={i} value={`item-${i}`}>
+                  <AccordionTrigger className="text-left text-primary font-semibold">{f.q}</AccordionTrigger>
+                  <AccordionContent className="text-muted-foreground">{f.a}</AccordionContent>
+                </AccordionItem>
+              ))}
+            </Accordion>
+          </div>
+        </div>
+
         <div className="container-tight mt-12">
+
           <div className="rounded-2xl bg-gradient-primary text-primary-foreground p-8 md:p-10 flex flex-col md:flex-row md:items-center md:justify-between gap-4">
             <div>
               <h3 className="font-display text-2xl font-bold">Not sure which service you need?</h3>
