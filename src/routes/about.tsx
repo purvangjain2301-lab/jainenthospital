@@ -61,9 +61,10 @@ function About() {
             <div className="grid sm:grid-cols-2 gap-5">
               {[
                 { icon: GraduationCap, t: "Academic excellence", d: "MBBS followed by MS in ENT. Continues to teach and mentor postgraduates at Banas Medical College." },
-                { icon: Microscope, t: "Surgical expertise", d: "Endoscopic sinus surgery, ear microsurgery, head and neck oncology procedures, and advanced airway care." },
-                { icon: Stethoscope, t: "Clinical breadth", d: "From routine ENT complaints to complex referral cases — every patient receives the same evidence-based attention." },
+                { icon: Microscope, t: "Cancer surgery experience", d: "Years of focused practice in head & neck oncology — oral, throat, laryngeal, thyroid and salivary gland cancers, including reconstructive procedures." },
+                { icon: Stethoscope, t: "Surgical expertise", d: "Endoscopic sinus surgery, ear microsurgery, advanced airway care, and complex referral cases." },
                 { icon: Users, t: "Community-first", d: "Dedicated to serving Deesa and the wider Banaskantha region with affordable, accessible specialist care." },
+
               ].map((b) => (
                 <div key={b.t} className="rounded-2xl ring-1 ring-border p-6 bg-white">
                   <b.icon className="h-7 w-7 text-crimson" />
