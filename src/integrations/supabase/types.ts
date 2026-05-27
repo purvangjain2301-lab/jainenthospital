@@ -214,6 +214,10 @@ export type Database = {
         }
         Returns: boolean
       }
+      mark_payment_pending_verification: {
+        Args: { _id: string }
+        Returns: undefined
+      }
     }
     Enums: {
       app_role: "admin"
