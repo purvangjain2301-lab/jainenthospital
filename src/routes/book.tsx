@@ -132,7 +132,10 @@ const { data, error: dbErr } = await supabase
     window.open(RAZORPAY_PAYMENT_LINK, "_blank", "noopener,noreferrer");
   }
 
-  function iHavePaid() {
+  async function iHavePaid() {
+    if (apptId) {
+      await supabase.rpc("mark_payment_pending_verification", { _id: apptId });
+    }
     const msg = [
       `*Appointment request — Jain ENT Hospital*`,
       `Name: ${form.name}`,
@@ -141,7 +144,7 @@ const { data, error: dbErr } = await supabase
       `Date: ${form.date}  Slot: ${form.slot}`,
       token ? `Token Number: ${token}` : "",
       `Concern: ${form.concern}`,
-      `Payment: ₹500 paid via Razorpay${apptId ? `  (Ref: ${apptId.slice(0,8)})` : ""}`,
+      `Payment: ₹500 - Payment confirmation pending. Please verify before appointment.${apptId ? `  (Ref: ${apptId.slice(0,8)})` : ""}`,
     ].filter(Boolean).join("\n");
     window.open(waLink(msg), "_blank", "noopener,noreferrer");
     setStep("done");
