@@ -22,7 +22,7 @@ export const Route = createFileRoute("/book")({
   component: Book,
 });
 
-const DEFAULT_SLOTS = ["10:00 AM", "11:00 AM", "12:00 PM", "01:00 PM", "04:00 PM", "05:00 PM", "06:00 PM"];
+const DEFAULT_SLOTS = ["10:00 AM", "11:00 AM", "12:00 PM", "01:00 PM", "03:00 PM", "04:00 PM", "05:00 PM", "06:00 PM"];
 const RAZORPAY_PAYMENT_LINK = "https://rzp.io/rzp/3hpqLFJU";
 const MAX_CAPACITY = 12;
 
