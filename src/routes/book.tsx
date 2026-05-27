@@ -134,10 +134,7 @@ const { data, error: dbErr } = await supabase
 
   async function iHavePaid() {
     if (apptId) {
-      await supabase
-        .from("appointments")
-        .update({ payment_status: "pending_verification" })
-        .eq("id", apptId);
+      await supabase.rpc("mark_payment_pending_verification", { _id: apptId });
     }
     const msg = [
       `*Appointment request — Jain ENT Hospital*`,
