@@ -137,7 +137,7 @@ function PatientDashboard({ user }: { user: { id: string; email: string } }) {
 
   async function cancel(a: Appointment) {
     if (!confirm("Cancel this appointment?")) return;
-    await supabase.from("appointments").update({ status: "cancelled" }).eq("id", a.id);
+    await supabase.rpc("cancel_my_appointment", { _id: a.id });
     load();
   }
 

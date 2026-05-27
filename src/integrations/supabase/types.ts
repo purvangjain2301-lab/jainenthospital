@@ -206,6 +206,7 @@ export type Database = {
         Args: { _date: string; _slot: string }
         Returns: number
       }
+      cancel_my_appointment: { Args: { _id: string }; Returns: undefined }
       has_role: {
         Args: {
           _role: Database["public"]["Enums"]["app_role"]
