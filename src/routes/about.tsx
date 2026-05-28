@@ -82,7 +82,7 @@ function About() {
                   "Modern endoscopic & microscopic ENT equipment.",
                   "Honest second-opinion culture; no over-treatment.",
                   "Same-day reports for most diagnostic tests.",
-                  "Multilingual consultations (English, Hindi, Gujarati).",
+                  "Multilingual consultations (English, Hindi, Gujarati, Marathi).",
                   "24×7 emergency phone access.",
                 ].map((x) => (
                   <li key={x} className="flex gap-2 opacity-95"><span className="text-crimson-foreground bg-crimson rounded-full h-5 w-5 inline-flex items-center justify-center text-xs shrink-0">✓</span>{x}</li>
