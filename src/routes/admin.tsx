@@ -58,33 +58,20 @@ function AdminPage() {
   return <AdminShell email={auth.email} onLogout={logout} />;
 }
 
-// ── Login / Signup ───────────────────────────────────────────────────────────
+// ── Login ─────────────────────────────────────────────────────────────────────
 function LoginScreen() {
-  const [mode, setMode] = useState<"signin" | "signup">("signin");
   const [email, setEmail] = useState("");
   const [pw, setPw] = useState("");
   const [show, setShow] = useState(false);
   const [err, setErr] = useState("");
   const [busy, setBusy] = useState(false);
-  const [info, setInfo] = useState("");
 
   async function submit(e: React.FormEvent) {
     e.preventDefault();
-    setErr(""); setInfo(""); setBusy(true);
+    setErr(""); setBusy(true);
     try {
-      if (mode === "signin") {
-        const { error } = await supabase.auth.signInWithPassword({ email, password: pw });
-        if (error) throw error;
-      } else {
-        const { error } = await supabase.auth.signUp({
-          email,
-          password: pw,
-          options: { emailRedirectTo: `${window.location.origin}/admin` },
-        });
-        if (error) throw error;
-        setInfo("Account created. If email confirmation is required, check your inbox, otherwise sign in below.");
-        setMode("signin");
-      }
+      const { error } = await supabase.auth.signInWithPassword({ email, password: pw });
+      if (error) throw error;
     } catch (e: any) {
       setErr(e.message || "Something went wrong");
     } finally {
@@ -126,17 +113,11 @@ function LoginScreen() {
             </div>
           </div>
           {err && <p className="text-xs text-red-500">{err}</p>}
-          {info && <p className="text-xs text-emerald-600">{info}</p>}
           <button type="submit" disabled={busy}
             className="w-full rounded-xl bg-primary text-primary-foreground py-3 text-sm font-semibold disabled:opacity-50">
-            {busy ? "Please wait…" : mode === "signin" ? "Sign In" : "Create Account"}
+            {busy ? "Please wait…" : "Sign In"}
           </button>
         </form>
-
-        <button onClick={() => { setMode(m => m === "signin" ? "signup" : "signin"); setErr(""); setInfo(""); }}
-          className="mt-4 w-full text-xs text-muted-foreground hover:text-primary">
-          {mode === "signin" ? "First-time setup? Create the doctor's admin account →" : "← Back to sign in"}
-        </button>
 
         <p className="mt-5 text-xs text-muted-foreground text-center">
           This page is not linked from anywhere on the public site.
