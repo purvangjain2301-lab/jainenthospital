@@ -43,7 +43,7 @@ function Info() {
             { icon: FileText, t: "Reports & follow-up", d: "Most diagnostics produce a same-day report. Follow-ups can be done via telemedicine." },
             { icon: ShieldCheck, t: "Privacy", d: "Records are kept strictly confidential and shared only with you." },
             { icon: MapPin, t: "Finding us", d: "First Floor, Iskcon Pride, opp. JIO Petrol Pump, Deesa Highway — easy to spot from the highway." },
-            { icon: Languages, t: "Languages", d: "Consultations in English, Hindi, and Gujarati." },
+            { icon: Languages, t: "Languages", d: "Consultations in English, Hindi, Gujarati, and Marathi." },
           ].map((b) => (
             <div key={b.t} className="rounded-2xl ring-1 ring-border bg-white p-6">
               <b.icon className="h-7 w-7 text-crimson" />
