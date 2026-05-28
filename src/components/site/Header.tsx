@@ -12,6 +12,7 @@ const NAV = [
   { to: "/telemedicine", label: "Telemedicine" },
   { to: "/pharmacy", label: "Pharmacy" },
   { to: "/patient-info", label: "Patient Info" },
+  { to: "/post-op-care", label: "Post-Op Care" },
   { to: "/blog", label: "Blog" },
   { to: "/gallery", label: "Gallery" },
   { to: "/contact", label: "Contact" },
