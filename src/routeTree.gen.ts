@@ -12,6 +12,7 @@ import { Route as rootRouteImport } from './routes/__root'
 import { Route as TelemedicineRouteImport } from './routes/telemedicine'
 import { Route as SitemapDotxmlRouteImport } from './routes/sitemap[.]xml'
 import { Route as ServicesRouteImport } from './routes/services'
+import { Route as PostOpCareRouteImport } from './routes/post-op-care'
 import { Route as PharmacyRouteImport } from './routes/pharmacy'
 import { Route as PatientInfoRouteImport } from './routes/patient-info'
 import { Route as MyAppointmentsRouteImport } from './routes/my-appointments'
@@ -36,6 +37,11 @@ const SitemapDotxmlRoute = SitemapDotxmlRouteImport.update({
 const ServicesRoute = ServicesRouteImport.update({
   id: '/services',
   path: '/services',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const PostOpCareRoute = PostOpCareRouteImport.update({
+  id: '/post-op-care',
+  path: '/post-op-care',
   getParentRoute: () => rootRouteImport,
 } as any)
 const PharmacyRoute = PharmacyRouteImport.update({
@@ -100,6 +106,7 @@ export interface FileRoutesByFullPath {
   '/my-appointments': typeof MyAppointmentsRoute
   '/patient-info': typeof PatientInfoRoute
   '/pharmacy': typeof PharmacyRoute
+  '/post-op-care': typeof PostOpCareRoute
   '/services': typeof ServicesRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
   '/telemedicine': typeof TelemedicineRoute
@@ -115,6 +122,7 @@ export interface FileRoutesByTo {
   '/my-appointments': typeof MyAppointmentsRoute
   '/patient-info': typeof PatientInfoRoute
   '/pharmacy': typeof PharmacyRoute
+  '/post-op-care': typeof PostOpCareRoute
   '/services': typeof ServicesRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
   '/telemedicine': typeof TelemedicineRoute
@@ -131,6 +139,7 @@ export interface FileRoutesById {
   '/my-appointments': typeof MyAppointmentsRoute
   '/patient-info': typeof PatientInfoRoute
   '/pharmacy': typeof PharmacyRoute
+  '/post-op-care': typeof PostOpCareRoute
   '/services': typeof ServicesRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
   '/telemedicine': typeof TelemedicineRoute
@@ -148,6 +157,7 @@ export interface FileRouteTypes {
     | '/my-appointments'
     | '/patient-info'
     | '/pharmacy'
+    | '/post-op-care'
     | '/services'
     | '/sitemap.xml'
     | '/telemedicine'
@@ -163,6 +173,7 @@ export interface FileRouteTypes {
     | '/my-appointments'
     | '/patient-info'
     | '/pharmacy'
+    | '/post-op-care'
     | '/services'
     | '/sitemap.xml'
     | '/telemedicine'
@@ -178,6 +189,7 @@ export interface FileRouteTypes {
     | '/my-appointments'
     | '/patient-info'
     | '/pharmacy'
+    | '/post-op-care'
     | '/services'
     | '/sitemap.xml'
     | '/telemedicine'
@@ -194,6 +206,7 @@ export interface RootRouteChildren {
   MyAppointmentsRoute: typeof MyAppointmentsRoute
   PatientInfoRoute: typeof PatientInfoRoute
   PharmacyRoute: typeof PharmacyRoute
+  PostOpCareRoute: typeof PostOpCareRoute
   ServicesRoute: typeof ServicesRoute
   SitemapDotxmlRoute: typeof SitemapDotxmlRoute
   TelemedicineRoute: typeof TelemedicineRoute
@@ -220,6 +233,13 @@ declare module '@tanstack/react-router' {
       path: '/services'
       fullPath: '/services'
       preLoaderRoute: typeof ServicesRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/post-op-care': {
+      id: '/post-op-care'
+      path: '/post-op-care'
+      fullPath: '/post-op-care'
+      preLoaderRoute: typeof PostOpCareRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/pharmacy': {
@@ -306,6 +326,7 @@ const rootRouteChildren: RootRouteChildren = {
   MyAppointmentsRoute: MyAppointmentsRoute,
   PatientInfoRoute: PatientInfoRoute,
   PharmacyRoute: PharmacyRoute,
+  PostOpCareRoute: PostOpCareRoute,
   ServicesRoute: ServicesRoute,
   SitemapDotxmlRoute: SitemapDotxmlRoute,
   TelemedicineRoute: TelemedicineRoute,
@@ -313,13 +334,3 @@ const rootRouteChildren: RootRouteChildren = {
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
   ._addFileTypes<FileRouteTypes>()
-
-import type { getRouter } from './router.tsx'
-import type { startInstance } from './start.ts'
-declare module '@tanstack/react-start' {
-  interface Register {
-    ssr: true
-    router: Awaited<ReturnType<typeof getRouter>>
-    config: Awaited<ReturnType<typeof startInstance.getOptions>>
-  }
-}
