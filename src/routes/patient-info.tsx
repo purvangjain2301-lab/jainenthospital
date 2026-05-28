@@ -24,7 +24,7 @@ const FAQS = [
   { q: "Do you accept cash and UPI?", a: "Yes — cash, UPI, debit/credit cards and online payments are all accepted." },
   { q: "Will the doctor see my child?", a: "Yes. Dr. Jain regularly cares for paediatric ENT patients including infants." },
   { q: "Is parking available?", a: "Yes — street parking and a JIO petrol-pump landmark right opposite the clinic make it easy to find." },
-  { q: "What languages can I consult in?", a: "English, Hindi, and Gujarati." },
+  { q: "What languages can I consult in?", a: "English, Hindi, Gujarati, and Marathi." },
 ];
 
 function Info() {
