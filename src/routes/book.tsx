@@ -4,7 +4,7 @@ import { SiteLayout, PageHero } from "@/components/site/SiteLayout";
 import { CLINIC, telPrimary, waLink } from "@/lib/clinic";
 import {
   CheckCircle2, MessageCircle, Phone, Calendar, Clock, IndianRupee,
-  CreditCard, ArrowLeft, ExternalLink, Ticket, Users,
+  CreditCard, ArrowLeft, ExternalLink, Ticket, Users, Languages,
 } from "lucide-react";
 import { supabase } from "@/lib/supabase";
 
@@ -12,9 +12,9 @@ export const Route = createFileRoute("/book")({
   head: () => ({
     meta: [
       { title: "Book Appointment — Jain ENT Hospital, Deesa" },
-      { name: "description", content: "Reserve an ENT consultation with Prof. Dr. Devendra M. Jain in Deesa. Mon–Sat 10 AM–7 PM. Pay only when confirmed." },
+      { name: "description", content: "Reserve an ENT, face surgery or cancer consultation with Prof. Dr. Devendra M. Jain in Deesa, or via telemedicine from anywhere. Mon–Sat 10 AM–7 PM." },
       { property: "og:title", content: "Book Appointment — Jain ENT Hospital" },
-      { property: "og:description", content: "Reserve your ENT consult in Deesa." },
+      { property: "og:description", content: "Reserve your ENT or face-surgery consult in Deesa, or worldwide via telemedicine." },
       { property: "og:url", content: "/book" },
     ],
     links: [{ rel: "canonical", href: "/book" }],
@@ -25,15 +25,19 @@ export const Route = createFileRoute("/book")({
 const DEFAULT_SLOTS = ["10:00 AM", "11:00 AM", "12:00 PM", "01:00 PM", "03:00 PM", "04:00 PM", "05:00 PM", "06:00 PM"];
 const RAZORPAY_PAYMENT_LINK = "https://rzp.io/rzp/3hpqLFJU";
 const MAX_CAPACITY = 12;
+const LANGUAGES = ["Hindi", "English", "Gujarati", "Marathi"] as const;
 
 type Step = "form" | "payment" | "done";
 type SlotInfo = { time_label: string; max_capacity: number; is_blocked: boolean; booked: number };
 
+const emptyForm = () => ({
+  name: "", age: "", phone: "", email: "", date: "", slot: "", concern: "",
+  mode: "Clinic Visit", consultLang: "Hindi",
+});
+
 function Book() {
   const [step, setStep] = useState<Step>("form");
-  const [form, setForm] = useState({
-    name: "", age: "", phone: "", email: "", date: "", slot: "", concern: "", mode: "Clinic Visit",
-  });
+  const [form, setForm] = useState(emptyForm());
   const [submitting, setSubmitting] = useState(false);
   const [apptId, setApptId] = useState<string | null>(null);
   const [token, setToken] = useState<number | null>(null);
@@ -41,9 +45,9 @@ function Book() {
   const [slotInfo, setSlotInfo] = useState<SlotInfo[]>([]);
   const [loadingSlots, setLoadingSlots] = useState(false);
 
+  const isTelemed = form.mode === "Telemedicine (Video)";
   const valid = form.name && form.phone && form.date && form.slot && form.concern;
 
-  // Load slots whenever date changes
   useEffect(() => {
     if (!form.date) { setSlotInfo([]); return; }
     let cancelled = false;
@@ -85,7 +89,6 @@ function Book() {
     setSubmitting(true);
     setError("");
 
-    // Allocate token using DB function
     const { data: tokenData, error: tokenErr } = await supabase
       .rpc("allocate_token", { _date: form.date, _slot: form.slot });
     if (tokenErr) {
@@ -93,29 +96,29 @@ function Book() {
     }
     const newToken = tokenData as number;
 
-    // Ensure we have a session (anon or real) so RLS insert policy is satisfied.
-    // If anonymous sign-in is disabled or the session isn't ready, fall back to null user_id (policy allows it).
     let authedUserId: string | null = null;
     const { data: userData } = await supabase.auth.getUser();
     if (userData.user) {
       authedUserId = userData.user.id;
     } else {
       const { data: anonData } = await supabase.auth.signInAnonymously();
-      // Re-read to confirm the session is active before we send user_id
       const { data: verified } = await supabase.auth.getUser();
       authedUserId = verified.user?.id ?? anonData.user?.id ?? null;
     }
 
-const { data, error: dbErr } = await supabase
-  .from("appointments")
-  .insert({
-    user_id: authedUserId,
+    const modeWithLang = isTelemed
+      ? `Telemedicine (Video) — ${form.consultLang}`
+      : form.mode;
 
+    const { data, error: dbErr } = await supabase
+      .from("appointments")
+      .insert({
+        user_id: authedUserId,
         name:           form.name,
         age:            form.age || null,
         phone:          form.phone,
         email:          form.email || null,
-        mode:           form.mode,
+        mode:           modeWithLang,
         date:           form.date,
         slot:           form.slot,
         concern:        form.concern,
@@ -148,6 +151,7 @@ const { data, error: dbErr } = await supabase
       `Name: ${form.name}`,
       `Phone: ${form.phone}`,
       `Mode: ${form.mode}`,
+      isTelemed ? `Language: ${form.consultLang}` : "",
       `Date: ${form.date}  Slot: ${form.slot}`,
       token ? `Token Number: ${token}` : "",
       `Concern: ${form.concern}`,
@@ -161,7 +165,7 @@ const { data, error: dbErr } = await supabase
     <SiteLayout>
       <PageHero
         eyebrow="Appointments"
-        title="Book your ENT consultation."
+        title="Book your ENT or face-surgery consultation."
         subtitle="Tell us when you'd like to visit. The ₹500 consultation fee appears only at the secure payment step — never before."
       />
 
@@ -199,6 +203,30 @@ const { data, error: dbErr } = await supabase
                       onChange={e => setForm({ ...form, date: e.target.value, slot: "" })} className="input" />
                   </Field>
                 </div>
+
+                {isTelemed && (
+                  <div className="rounded-xl bg-primary/5 ring-1 ring-primary/20 p-4">
+                    <div className="flex items-center gap-2 text-sm font-semibold text-primary mb-3">
+                      <Languages className="h-4 w-4" /> Preferred consultation language
+                    </div>
+                    <div className="flex flex-wrap gap-2">
+                      {LANGUAGES.map(l => (
+                        <label key={l}
+                          className={`cursor-pointer rounded-full px-4 py-2 text-sm font-semibold ring-1 transition ${
+                            form.consultLang === l
+                              ? "bg-crimson text-crimson-foreground ring-crimson"
+                              : "bg-white ring-border text-foreground hover:ring-primary"
+                          }`}>
+                          <input type="radio" name="consultLang" value={l}
+                            checked={form.consultLang === l}
+                            onChange={() => setForm({ ...form, consultLang: l })}
+                            className="sr-only" />
+                          {l}
+                        </label>
+                      ))}
+                    </div>
+                  </div>
+                )}
 
                 {form.date && (
                   <div>
@@ -247,8 +275,8 @@ const { data, error: dbErr } = await supabase
                   className="inline-flex w-full sm:w-auto items-center justify-center gap-2 rounded-full bg-crimson px-7 py-3.5 text-sm font-semibold text-crimson-foreground disabled:opacity-50">
                   <MessageCircle className="h-4 w-4" /> {submitting ? "Reserving…" : "Continue to payment"}
                 </button>
-                <p className="text-xs text-muted-foreground">Sunday closed. Emergencies: call {CLINIC.phones.primary} (24×7).</p>
-               <p className="text-xs text-muted-foreground"> Prefer to Call if slot not AVAILABLE / FOUND  {CLINIC.phones.primary} (24×7).</p>
+                <p className="text-xs text-muted-foreground">Sunday closed. Emergencies: call <a className="underline" href={`tel:${telPrimary}`}>{CLINIC.phones.primary}</a> (24×7).</p>
+                <p className="text-xs text-muted-foreground">Prefer to call if slot not available / found — <a className="underline" href={`tel:${telPrimary}`}>{CLINIC.phones.primary}</a> (24×7).</p>
               </form>
             )}
 
@@ -272,6 +300,7 @@ const { data, error: dbErr } = await supabase
                   <Row k="Patient"  v={form.name} />
                   <Row k="Date"     v={`${form.date} · ${form.slot}`} />
                   <Row k="Mode"     v={form.mode} />
+                  {isTelemed && <Row k="Language" v={form.consultLang} />}
                   {token !== null && <Row k="Token #"  v={String(token)} />}
                   <div className="border-t border-border pt-2 mt-2 flex justify-between font-bold text-primary">
                     <span>Consultation fee</span>
@@ -315,20 +344,29 @@ const { data, error: dbErr } = await supabase
                     Your token: <b>#{token}</b> · {form.date} · {form.slot}
                   </p>
                 )}
+                {isTelemed && (
+                  <p className="mt-1 text-sm text-muted-foreground">
+                    Telemedicine (Video) · Language: <b>{form.consultLang}</b>
+                  </p>
+                )}
                 <p className="text-muted-foreground mt-2 text-sm">
                   Payment received · ₹500. We've sent a WhatsApp confirmation. Our team will reach you
                   within clinic hours ({CLINIC.hours.weekdays}).
                 </p>
+                <p className="mt-3 text-sm text-primary bg-primary/5 ring-1 ring-primary/15 rounded-xl p-3">
+                  💡 Tip: Save your phone number — you can view & manage this appointment anytime at
+                  <b> My Appointments</b> using just your phone number or email.
+                </p>
                 <div className="mt-5 flex flex-wrap gap-3">
+                  <Link to="/my-appointments"
+                    className="inline-flex items-center gap-2 rounded-full bg-crimson text-crimson-foreground px-5 py-2.5 text-sm font-semibold">
+                    View My Appointments →
+                  </Link>
                   <a href={`tel:${telPrimary}`}
                     className="inline-flex items-center gap-2 rounded-full bg-primary px-5 py-2.5 text-sm font-semibold text-primary-foreground">
                     <Phone className="h-4 w-4" /> Call {CLINIC.phones.primary}
                   </a>
-                  <Link to="/my-appointments"
-                    className="inline-flex items-center gap-2 rounded-full ring-1 ring-border px-5 py-2.5 text-sm font-semibold">
-                    My Appointments
-                  </Link>
-                  <button onClick={() => { setStep("form"); setToken(null); setApptId(null); setForm({ name:"", age:"", phone:"", email:"", date:"", slot:"", concern:"", mode:"Clinic Visit" }); }}
+                  <button onClick={() => { setStep("form"); setToken(null); setApptId(null); setForm(emptyForm()); }}
                     className="inline-flex items-center gap-2 rounded-full ring-1 ring-border px-5 py-2.5 text-sm font-semibold">
                     New booking
                   </button>
@@ -355,7 +393,7 @@ const { data, error: dbErr } = await supabase
             </div>
             <a href={`tel:${telPrimary}`}
               className="block rounded-2xl bg-crimson text-crimson-foreground p-5 text-center font-semibold">
-              Prefer to call? /  {CLINIC.phones.primary}
+              Prefer to call? {CLINIC.phones.primary}
             </a>
           </aside>
         </div>

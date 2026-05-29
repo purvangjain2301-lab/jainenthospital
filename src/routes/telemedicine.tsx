@@ -1,14 +1,14 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { SiteLayout, PageHero } from "@/components/site/SiteLayout";
-import { Video, ShieldCheck, Wifi, Clock, ArrowRight } from "lucide-react";
+import { Video, ShieldCheck, Wifi, Clock, Globe, ArrowRight } from "lucide-react";
 
 export const Route = createFileRoute("/telemedicine")({
   head: () => ({
     meta: [
       { title: "ENT Telemedicine — Consult Dr. Devendra Jain online" },
-      { name: "description", content: "Secure video ENT consultations with Prof. Dr. Devendra M. Jain. Ideal for follow-ups, second opinions, and patients outside Deesa." },
+      { name: "description", content: "Online ENT consultations with Prof. Dr. Devendra M. Jain. Available to patients across India and worldwide. Hindi, English, Gujarati, Marathi." },
       { property: "og:title", content: "ENT Telemedicine — Jain ENT Hospital" },
-      { property: "og:description", content: "Online ENT consultations from anywhere." },
+      { property: "og:description", content: "Online ENT consultations from anywhere in India and abroad." },
       { property: "og:url", content: "/telemedicine" },
     ],
     links: [{ rel: "canonical", href: "/telemedicine" }],
@@ -22,7 +22,7 @@ function Telemed() {
       <PageHero
         eyebrow="Telemedicine"
         title="See the specialist — without the travel."
-        subtitle="Secure video consultations for follow-ups, second opinions, and patients living outside Deesa. Convenient, private, doctor-led."
+        subtitle="Secure video consultations for patients anywhere in India and abroad — follow-ups, second opinions, NRI consultations. Convenient, private, doctor-led."
       />
       <section className="py-14">
         <div className="container-tight grid md:grid-cols-3 gap-5">
@@ -31,6 +31,7 @@ function Telemed() {
             { icon: ShieldCheck, t: "Private & encrypted", d: "Your visit is one-on-one and confidential. Records stay with the clinic." },
             { icon: Wifi, t: "Works on basic 4G", d: "All you need is a phone and a stable connection — we'll guide you." },
             { icon: Clock, t: "Same-day slots", d: "Most requests are accommodated within the same working day." },
+            { icon: Globe, t: "Available worldwide", d: "Patients from any state or country can consult Dr. Jain via video. Hindi, English, Gujarati and Marathi spoken." },
           ].map((b) => (
             <div key={b.t} className="rounded-2xl ring-1 ring-border bg-white p-6">
               <b.icon className="h-7 w-7 text-crimson" />
@@ -44,7 +45,15 @@ function Telemed() {
           <div className="rounded-2xl bg-primary text-primary-foreground p-8">
             <h3 className="font-display text-2xl font-bold">Best suited for</h3>
             <ul className="mt-4 space-y-2 text-sm opacity-95">
-              {["Follow-up after surgery or treatment","Review of test/scan reports","Second opinion on an ENT diagnosis","Recurrent allergy / sinus / throat issues","Prescription refill consultations","Out-of-town and NRI patients"].map((x) => (
+              {[
+                "Follow-up after surgery or treatment",
+                "Review of test/scan reports",
+                "Second opinion on an ENT diagnosis",
+                "Recurrent allergy / sinus / throat issues",
+                "Prescription refill consultations",
+                "NRI and international patients seeking a specialist second opinion",
+                "Patients across India unable to travel to Deesa",
+              ].map((x) => (
                 <li key={x} className="flex gap-2"><span className="text-crimson-foreground bg-crimson rounded-full h-5 w-5 inline-flex items-center justify-center text-xs shrink-0">✓</span>{x}</li>
               ))}
             </ul>
@@ -65,7 +74,7 @@ function Telemed() {
         <div className="container-tight mt-12">
           <div className="rounded-3xl bg-gradient-primary p-10 text-primary-foreground text-center">
             <h3 className="font-display text-3xl font-bold">Ready for a video consult?</h3>
-            <p className="mt-2 opacity-90">Choose "Telemedicine (Video)" while booking.</p>
+            <p className="mt-2 opacity-90">Choose your language and slot — book your video consult from anywhere.</p>
             <Link to="/book" className="mt-5 inline-flex items-center gap-2 rounded-full bg-white text-primary px-6 py-3 font-semibold">
               Book telemedicine slot <ArrowRight className="h-4 w-4" />
             </Link>

@@ -11,10 +11,10 @@ import { CLINIC, telPrimary } from "@/lib/clinic";
 export const Route = createFileRoute("/")({
   head: () => ({
     meta: [
-      { title: "Jain ENT Hospital, Deesa — Prof. Dr. Devendra M. Jain | ENT & Head-Neck Cancer Specialist" },
-      { name: "description", content: "Advanced ENT and head-and-neck cancer care in Deesa, Gujarat. Led by Prof. Dr. Devendra M. Jain, MBBS MS (ENT). 17+ years experience. Book today." },
-      { property: "og:title", content: "Jain ENT Hospital — Deesa" },
-      { property: "og:description", content: "ENT specialist & head-neck cancer surgeon in Deesa. Book an appointment." },
+      { title: "Jain ENT Hospital, Deesa — Prof. Dr. Devendra M. Jain | ENT, Face Surgery & Head-Neck Cancer Specialist" },
+      { name: "description", content: "Advanced ENT, face surgery and head-neck cancer care in Deesa, Gujarat. Worldwide telemedicine available. Led by Prof. Dr. Devendra M. Jain, MBBS MS (ENT), Face Surgeon & Cancer Surgeon. 17+ years experience." },
+      { property: "og:title", content: "Jain ENT Hospital — ENT, Face Surgery & Head-Neck Cancer Specialist" },
+      { property: "og:description", content: "ENT, face surgery & head-neck cancer surgeon in Deesa. Worldwide telemedicine. Book an appointment." },
       { property: "og:url", content: "/" },
     ],
     links: [{ rel: "canonical", href: "/" }],
@@ -26,7 +26,8 @@ const SERVICES = [
   { icon: Ear, title: "Ear Care", desc: "Hearing loss, infections, tinnitus, vertigo, microsurgery." },
   { icon: HeartPulse, title: "Nose & Sinus", desc: "Sinusitis, allergies, deviated septum, endoscopic surgery." },
   { icon: Stethoscope, title: "Throat & Voice", desc: "Tonsils, adenoids, hoarseness, snoring, sleep apnoea." },
-  { icon: Microscope, title: "Head & Neck Cancer", desc: "Oncology-trained surgical care for advanced cases." },
+  { icon: Sparkles, title: "Face Surgery", desc: "Rhinoplasty, otoplasty, facial trauma repair & post-cancer reconstruction." },
+  { icon: Microscope, title: "Head-Neck Cancer", desc: "Oncology-trained surgical care for oral, throat, laryngeal & thyroid cancers." },
 ];
 
 function HomePage() {
@@ -41,22 +42,22 @@ function HomePage() {
               className="inline-flex items-center gap-2 rounded-full bg-white/70 ring-1 ring-border px-3 py-1 text-xs font-semibold uppercase tracking-wider text-primary"
             >
               <Sparkles className="h-3.5 w-3.5 text-crimson" />
-              Deesa's trusted ENT specialist · 17+ years
+              ENT & Face Surgery Specialist · 17+ years · Worldwide Telemedicine
             </motion.div>
             <motion.h1
               initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6, delay: 0.05 }}
               className="mt-5 font-display text-4xl sm:text-5xl lg:text-6xl font-bold text-primary text-balance leading-[1.05]"
             >
               Expert care for your{" "}
-              <span className="text-crimson">Ear, Nose, Throat</span> & Head–Neck Health.
+              <span className="text-crimson">Ear, Nose, Throat & Face</span> & Head-Neck Health.
             </motion.h1>
             <motion.p
               initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6, delay: 0.1 }}
               className="mt-5 max-w-xl text-base md:text-lg text-muted-foreground text-pretty"
             >
               Led by <strong className="text-foreground">{CLINIC.doctor.name}</strong>, MBBS, MS (ENT) —
-              Otorhinolaryngologist & Head–Neck Cancer Surgeon. Compassionate, modern, evidence-based ENT
-              care for the people of Deesa and Banaskantha.
+              Face Surgeon & Head-Neck Cancer Surgeon. Compassionate, modern, evidence-based care for
+              patients across India and worldwide.
             </motion.p>
             <motion.div
               initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6, delay: 0.15 }}
@@ -74,8 +75,8 @@ function HomePage() {
             <div className="mt-8 grid grid-cols-3 gap-3 max-w-md">
               {[
                 { k: "17+", v: "Years Exp." },
-                { k: "MS ENT", v: "Degree" },
-                { k: "24×7", v: "Emergency" },
+                { k: "MS ENT", v: "Specialist" },
+                { k: "Face & Cancer", v: "Surgery" },
               ].map((s) => (
                 <div key={s.v} className="rounded-xl bg-white/70 ring-1 ring-border p-3 text-center">
                   <div className="font-display text-2xl font-bold text-primary">{s.k}</div>
@@ -99,7 +100,7 @@ function HomePage() {
                       <div className="text-xs uppercase tracking-wider opacity-80">Consult with</div>
                       <div className="font-display text-2xl font-bold leading-tight">{CLINIC.doctor.name}</div>
                       <div className="text-sm opacity-90">{CLINIC.doctor.creds}</div>
-                      <div className="text-sm font-semibold text-crimson-foreground/90">Cancer Surgeon</div>
+                      <div className="text-sm font-semibold text-crimson-foreground/90">Face Surgeon · Cancer Surgeon</div>
                     </div>
                   </div>
                 </div>
@@ -139,13 +140,13 @@ function HomePage() {
           <div className="flex flex-col md:flex-row md:items-end md:justify-between gap-4 mb-10">
             <div>
               <div className="text-xs uppercase tracking-wider text-crimson font-semibold">What we treat</div>
-              <h2 className="mt-2 font-display text-3xl md:text-4xl font-bold text-primary">Comprehensive ENT care, one roof.</h2>
+              <h2 className="mt-2 font-display text-3xl md:text-4xl font-bold text-primary">Comprehensive ENT & face surgery, one roof.</h2>
             </div>
             <Link to="/services" className="text-sm font-semibold text-primary hover:text-crimson inline-flex items-center gap-1">
               View all services <ArrowRight className="h-4 w-4" />
             </Link>
           </div>
-          <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-5">
+          <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-5">
             {SERVICES.map((s, i) => (
               <motion.div key={s.title}
                 initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }}
@@ -186,8 +187,8 @@ function HomePage() {
               {[
                 { k: "MBBS", v: "Foundational" },
                 { k: "MS (ENT)", v: "Specialist" },
-                { k: "17+ yrs", v: "Practice" },
-                { k: "Professor", v: "Banas Medical College" },
+                { k: "Face Surgeon", v: "Cosmetic & Reconstructive" },
+                { k: "Cancer Surgeon", v: "Head-Neck Oncology" },
               ].map((b) => (
                 <div key={b.k} className="rounded-2xl bg-white/10 ring-1 ring-white/15 p-5">
                   <div className="font-display text-2xl font-bold">{b.k}</div>
@@ -207,11 +208,12 @@ function HomePage() {
             <div className="relative grid md:grid-cols-3 gap-6 items-center">
               <div className="md:col-span-2">
                 <h2 className="font-display text-3xl md:text-4xl font-bold text-balance">
-                  Worried about an ENT symptom? Don't wait.
+                  Worried about an ENT or facial symptom? Don't wait.
                 </h2>
                 <p className="mt-3 opacity-90 max-w-xl">
-                  Most ENT issues are easier to treat early. Reserve a consultation with
-                  Dr. Devendra Jain today — in clinic or via telemedicine.
+                  Most ENT and facial issues are easier to treat early. Reserve a consultation with
+                  Dr. Devendra Jain today — in clinic or via telemedicine. Patients across India and
+                  worldwide welcome.
                 </p>
               </div>
               <div className="flex flex-col gap-3 md:items-end">

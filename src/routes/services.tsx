@@ -1,11 +1,11 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { SiteLayout, PageHero } from "@/components/site/SiteLayout";
-import { Ear, Wind, Activity, Microscope, Mic, Moon, Baby, AlertTriangle, ArrowRight } from "lucide-react";
+import { Ear, Wind, Activity, Microscope, Mic, Moon, Baby, AlertTriangle, Sparkles, ArrowRight } from "lucide-react";
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
 
 const CANCER_FAQ = [
-  { q: "What types of head & neck cancers do you treat?", a: "We manage cancers of the oral cavity (tongue, cheek, lip), throat (pharynx, larynx), thyroid gland, salivary glands, and neck lymph nodes — from early lesions to advanced cases requiring multi-modality treatment." },
-  { q: "How is head & neck cancer diagnosed?", a: "Diagnosis usually starts with a clinical exam and video endoscopy, followed by a biopsy of the suspicious area. Imaging (CT / MRI / ultrasound) and FNAC for neck swellings help stage the disease and plan surgery." },
+  { q: "What types of head-neck cancers do you treat?", a: "We manage cancers of the oral cavity (tongue, cheek, lip), throat (pharynx, larynx), thyroid gland, salivary glands, and neck lymph nodes — from early lesions to advanced cases requiring multi-modality treatment." },
+  { q: "How is head-neck cancer diagnosed?", a: "Diagnosis usually starts with a clinical exam and video endoscopy, followed by a biopsy of the suspicious area. Imaging (CT / MRI / ultrasound) and FNAC for neck swellings help stage the disease and plan surgery." },
   { q: "Is surgery always required?", a: "Not always. Treatment depends on the tumour type, location, and stage. Some cancers respond well to radiation or chemotherapy alone, while others need surgery followed by adjuvant therapy. We discuss every option transparently before deciding." },
   { q: "Will I be able to speak and swallow normally after surgery?", a: "We use voice- and swallow-preserving techniques whenever possible. Speech therapy and swallowing rehabilitation are arranged after surgery, and most patients regain near-normal function within weeks." },
   { q: "How long is the hospital stay after cancer surgery?", a: "It varies from 2–3 days for smaller resections to 7–10 days for major neck dissections or reconstructive procedures. Discharge depends on wound healing, oral intake, and drain output." },
@@ -14,14 +14,22 @@ const CANCER_FAQ = [
   { q: "Do you coordinate with oncologists for chemotherapy and radiation?", a: "Yes. We work closely with medical and radiation oncologists to plan combined treatment, so patients receive seamless care from diagnosis through recovery." },
 ];
 
+const FACE_FAQ = [
+  { q: "What face surgeries does Dr. Jain perform?", a: "Dr. Jain performs rhinoplasty (nose reshaping), otoplasty (ear correction), post-cancer facial reconstruction, facial trauma repair, scar revision, and management of facial nerve conditions — all within an ENT specialist's scope." },
+  { q: "Is surgery done under general or local anaesthesia?", a: "Smaller procedures like otoplasty and scar revision are often done under local anaesthesia. Rhinoplasty and reconstructive surgeries usually require general anaesthesia. The choice is discussed and planned individually before every procedure." },
+  { q: "How long is recovery after face surgery?", a: "Most patients return to normal activity within 1–2 weeks for minor procedures and 3–4 weeks for major reconstruction. Swelling and bruising resolve over 2–6 weeks depending on the procedure." },
+  { q: "Will there be visible scars?", a: "Incisions are placed in natural skin creases or inside the nose wherever possible to minimise visible scarring. Most scars fade significantly within 6–12 months." },
+  { q: "Can I consult for face surgery via telemedicine?", a: "Yes — initial consultation, photo review and post-operative follow-ups can all be done via video call. Patients from outside Deesa or abroad are welcome to book a telemedicine slot." },
+];
+
 
 export const Route = createFileRoute("/services")({
   head: () => ({
     meta: [
-      { title: "ENT Services & Procedures — Jain ENT Hospital, Deesa" },
-      { name: "description", content: "Full-spectrum ENT care: ear surgery, sinus & allergy, voice & swallowing, head-neck cancer, paediatric ENT, sleep apnoea, vertigo. Deesa, Gujarat." },
+      { title: "ENT & Face Surgery Services — Jain ENT Hospital, Deesa" },
+      { name: "description", content: "Full-spectrum ENT & face surgery: rhinoplasty, otoplasty, ear surgery, sinus, voice, head-neck cancer. Clinic in Deesa, Gujarat. Telemedicine available worldwide." },
       { property: "og:title", content: "Services — Jain ENT Hospital" },
-      { property: "og:description", content: "Comprehensive ENT and head-neck cancer services." },
+      { property: "og:description", content: "Comprehensive ENT, face surgery and head-neck cancer services." },
       { property: "og:url", content: "/services" },
     ],
     links: [{ rel: "canonical", href: "/services" }],
@@ -43,8 +51,12 @@ const GROUPS = [
     items: ["Tonsillitis & tonsillectomy", "Adenoids in children", "Hoarseness / voice disorders", "Vocal cord nodules & polyps", "Swallowing difficulty (dysphagia)", "Reflux laryngitis (LPR)"],
   },
   {
-    icon: Microscope, title: "Head & Neck Oncology",
+    icon: Microscope, title: "Head-Neck Oncology",
     items: ["Oral cavity cancer screening", "Throat & larynx tumours", "Thyroid swellings & surgery", "Salivary gland disease", "Neck-mass evaluation", "Coordinated cancer treatment planning"],
+  },
+  {
+    icon: Sparkles, title: "Face Surgery (Facial Plastics)",
+    items: ["Rhinoplasty (nose reshaping)", "Otoplasty (ear reshaping / pinning)", "Facial trauma & fracture repair", "Post-cancer facial reconstruction", "Scar revision & keloid treatment", "Facial nerve palsy management"],
   },
   {
     icon: Moon, title: "Sleep & Snoring",
@@ -64,7 +76,7 @@ const GROUPS = [
   },
   {
     icon: Microscope, title: "Cancer Surgery",
-    items: ["Head & neck tumour excision", "Thyroid cancer surgery", "Oral cavity cancer surgery", "Laryngeal cancer procedures", "Reconstructive surgery post-oncology", "Post-operative cancer rehabilitation"],
+    items: ["Head-neck tumour excision", "Thyroid cancer surgery", "Oral cavity cancer surgery", "Laryngeal cancer procedures", "Reconstructive surgery post-oncology", "Facial skin cancer excision", "Parotid (salivary gland) surgery", "Post-operative cancer rehabilitation"],
   },
 ];
 
@@ -73,7 +85,7 @@ function Services() {
     <SiteLayout>
       <PageHero
         eyebrow="Services"
-        title="Every ENT need, from routine to complex."
+        title="Every ENT & face surgery need, from routine to complex."
         subtitle="A single-specialist hospital means continuity of care: the doctor who diagnoses you is the same one who performs your procedure and follows you up."
       />
       <section className="py-16">
@@ -99,6 +111,31 @@ function Services() {
           <div className="rounded-2xl ring-1 ring-border bg-white p-7 md:p-10">
             <div className="flex items-center gap-3">
               <div className="inline-flex h-11 w-11 items-center justify-center rounded-xl bg-crimson/10 text-crimson">
+                <Sparkles className="h-5 w-5" />
+              </div>
+              <div>
+                <p className="text-xs uppercase tracking-widest text-muted-foreground">FAQs</p>
+                <h2 className="font-display text-2xl font-bold text-primary">Face Surgery — Common Questions</h2>
+              </div>
+            </div>
+            <p className="mt-3 text-sm text-muted-foreground max-w-2xl">
+              Answers to the most common questions about rhinoplasty, otoplasty, facial reconstruction and scar revision.
+            </p>
+            <Accordion type="single" collapsible className="mt-6">
+              {FACE_FAQ.map((f, i) => (
+                <AccordionItem key={i} value={`face-${i}`}>
+                  <AccordionTrigger className="text-left text-primary font-semibold">{f.q}</AccordionTrigger>
+                  <AccordionContent className="text-muted-foreground">{f.a}</AccordionContent>
+                </AccordionItem>
+              ))}
+            </Accordion>
+          </div>
+        </div>
+
+        <div className="container-tight mt-10">
+          <div className="rounded-2xl ring-1 ring-border bg-white p-7 md:p-10">
+            <div className="flex items-center gap-3">
+              <div className="inline-flex h-11 w-11 items-center justify-center rounded-xl bg-crimson/10 text-crimson">
                 <Microscope className="h-5 w-5" />
               </div>
               <div>
@@ -107,11 +144,11 @@ function Services() {
               </div>
             </div>
             <p className="mt-3 text-sm text-muted-foreground max-w-2xl">
-              Answers to the questions patients and families most often ask about head & neck cancer diagnosis, surgery, and post-operative recovery.
+              Answers to the questions patients and families most often ask about head-neck cancer diagnosis, surgery, and post-operative recovery.
             </p>
             <Accordion type="single" collapsible className="mt-6">
               {CANCER_FAQ.map((f, i) => (
-                <AccordionItem key={i} value={`item-${i}`}>
+                <AccordionItem key={i} value={`cancer-${i}`}>
                   <AccordionTrigger className="text-left text-primary font-semibold">{f.q}</AccordionTrigger>
                   <AccordionContent className="text-muted-foreground">{f.a}</AccordionContent>
                 </AccordionItem>
