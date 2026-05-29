@@ -206,7 +206,37 @@ export type Database = {
         Args: { _date: string; _slot: string }
         Returns: number
       }
+      cancel_appointment_by_contact: {
+        Args: { _contact: string; _id: string }
+        Returns: undefined
+      }
       cancel_my_appointment: { Args: { _id: string }; Returns: undefined }
+      find_appointments_by_contact: {
+        Args: { _contact: string }
+        Returns: {
+          age: string | null
+          concern: string
+          created_at: string
+          date: string
+          email: string | null
+          id: string
+          mode: string
+          name: string
+          payment_status: string
+          phone: string
+          razorpay_order_id: string | null
+          slot: string
+          status: string
+          token_number: number | null
+          user_id: string | null
+        }[]
+        SetofOptions: {
+          from: "*"
+          to: "appointments"
+          isOneToOne: false
+          isSetofReturn: true
+        }
+      }
       has_role: {
         Args: {
           _role: Database["public"]["Enums"]["app_role"]
