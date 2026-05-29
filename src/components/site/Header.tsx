@@ -1,6 +1,6 @@
 import { Link } from "@tanstack/react-router";
 import { useState } from "react";
-import { Menu, X, CalendarCheck } from "lucide-react";
+import { Menu, X, CalendarCheck, UserCircle } from "lucide-react";
 import logo from "@/assets/logo.jpg";
 import { EmergencyBar } from "./EmergencyBar";
 import { CLINIC } from "@/lib/clinic";
@@ -16,6 +16,7 @@ const NAV = [
   { to: "/blog", label: "Blog" },
   { to: "/gallery", label: "Gallery" },
   { to: "/contact", label: "Contact" },
+  { to: "/my-appointments", label: "My Appts", icon: true },
 ] as const;
 
 export function Header() {
@@ -48,8 +49,9 @@ export function Header() {
               key={n.to}
               to={n.to}
               activeOptions={{ exact: n.to === "/" }}
-              className="px-3 py-2 text-sm font-medium text-foreground/80 rounded-md hover:text-primary hover:bg-secondary transition-colors [&.active]:text-primary [&.active]:bg-secondary"
+              className="px-3 py-2 text-sm font-medium text-foreground/80 rounded-md hover:text-primary hover:bg-secondary transition-colors [&.active]:text-primary [&.active]:bg-secondary inline-flex items-center gap-1.5"
             >
+              {"icon" in n && n.icon && <UserCircle className="h-4 w-4" />}
               {n.label}
             </Link>
           ))}
@@ -83,8 +85,9 @@ export function Header() {
                 to={n.to}
                 onClick={() => setOpen(false)}
                 activeOptions={{ exact: n.to === "/" }}
-                className="px-2 py-3 text-base font-medium border-b border-border/50 last:border-none [&.active]:text-primary"
+                className="px-2 py-3 text-base font-medium border-b border-border/50 last:border-none [&.active]:text-primary inline-flex items-center gap-2"
               >
+                {"icon" in n && n.icon && <UserCircle className="h-4 w-4" />}
                 {n.label}
               </Link>
             ))}

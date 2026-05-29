@@ -1,5 +1,5 @@
 import { Link } from "@tanstack/react-router";
-import { Facebook, Instagram, MapPin, Phone, Mail, Clock } from "lucide-react";
+import { Facebook, Instagram, MapPin, Phone, Mail, Clock, UserCircle } from "lucide-react";
 import logo from "@/assets/logo.jpg";
 import { CLINIC, telPrimary } from "@/lib/clinic";
 
@@ -16,9 +16,9 @@ export function Footer() {
             </div>
           </div>
           <p className="mt-5 text-sm leading-relaxed opacity-85 max-w-md">
-            Comprehensive ENT and head-and-neck cancer care led by {CLINIC.doctor.name},
-            serving Deesa and the Banaskantha region with 17+ years of specialist
-            expertise.
+            Comprehensive ENT, face surgery and head-neck cancer care led by {CLINIC.doctor.name},
+            serving patients across India and worldwide via telemedicine, with the clinic based
+            in Deesa, Gujarat. 17+ years of specialist expertise.
           </p>
           <div className="mt-5 flex gap-3">
             <a href={CLINIC.social.facebook} target="_blank" rel="noreferrer"
@@ -41,7 +41,7 @@ export function Footer() {
         </div>
 
         <div>
-          <h3 className="font-display text-lg font-semibold mb-4">Contact</h3>
+          <h3 className="font-display text-lg font-semibold mb-4">Contact & Patients</h3>
           <ul className="space-y-3 text-sm opacity-90">
             <li className="flex gap-2"><Phone className="h-4 w-4 mt-0.5 shrink-0 text-crimson" />
               <a href={`tel:${telPrimary}`} className="hover:underline">{CLINIC.phones.primary}</a></li>
@@ -49,6 +49,8 @@ export function Footer() {
               <a href={`tel:${CLINIC.phones.secondary.replace(/\s/g,'')}`} className="hover:underline">{CLINIC.phones.secondary}</a></li>
             <li className="flex gap-2"><Mail className="h-4 w-4 mt-0.5 shrink-0 text-crimson" />
               <a href={`mailto:${CLINIC.email}`} className="hover:underline break-all">{CLINIC.email}</a></li>
+            <li className="flex gap-2"><UserCircle className="h-4 w-4 mt-0.5 shrink-0 text-crimson" />
+              <Link to="/my-appointments" className="hover:underline">My Appointments</Link></li>
             <li className="pt-3">
               <Link to="/book" className="inline-flex items-center gap-2 rounded-full bg-crimson px-4 py-2 text-sm font-semibold">
                 Book Appointment
@@ -60,7 +62,7 @@ export function Footer() {
       <div className="border-t border-white/15">
         <div className="container-tight py-5 flex flex-col sm:flex-row gap-2 sm:items-center sm:justify-between text-xs opacity-80">
           <div>© {new Date().getFullYear()} Jain ENT Hospital, Deesa. All rights reserved.</div>
-          <div>Designed with care for patients of Banaskantha.</div>
+          <div>Caring for patients across India and around the world.</div>
         </div>
       </div>
     </footer>
