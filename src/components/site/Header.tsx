@@ -77,7 +77,7 @@ export function Header() {
       </div>
 
       {open && (
-        <div className="lg:hidden border-t border-border bg-background">
+        <div className="lg:hidden border-t border-border bg-background max-h-[80vh] overflow-y-auto overscroll-contain">
           <nav className="container-tight flex flex-col py-2" aria-label="Mobile">
             {NAV.map((n) => (
               <Link
