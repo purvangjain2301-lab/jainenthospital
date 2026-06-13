@@ -68,7 +68,7 @@ function Contact() {
             </a>
             <div className="rounded-2xl overflow-hidden ring-1 ring-border bg-white">
               <iframe
-                title="Jain ENT Hospital location"
+                title="Jain ENT Hospital Deesa location"
                 src="https://www.google.com/maps?q=24.2724378,72.1794694&output=embed"
                 className="w-full h-80 border-0"
                 loading="lazy"
