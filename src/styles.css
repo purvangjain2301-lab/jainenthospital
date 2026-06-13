@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@500;600;700;800;900&family=Source+Sans+3:wght@300;400;500;600;700&display=swap');
+/* Google Fonts loaded via <link> in index.html / __root.tsx */
 @import "tailwindcss" source(none);
 @source "../src";
 @import "tw-animate-css";
