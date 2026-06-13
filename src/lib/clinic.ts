@@ -36,7 +36,7 @@ export const CLINIC = {
   },
   social: {
     facebook: "https://share.google/nnGSfq03wLnaikGhn",
-    instagram: "https://www.instagram.com/dr_devendra_jain",
+    instagram: "https://www.instagram.com/dr_devendra_jain/?utm_source=ig_web_button_share_sheet",
     maps: "https://maps.app.goo.gl/XWZ76VQYTcVqBwFd9",
   },
 } as const;
