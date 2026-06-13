@@ -111,7 +111,7 @@ function HomePage() {
                   </div>
                   <div className="flex items-center gap-2 text-sm">
                     <ShieldCheck className="h-4 w-4 text-crimson" />
-                    <span>Professor at Banas Medical College, Palanpur</span>
+                    <span>15+ years of experience as a Teaching Professor</span>
                   </div>
                   <div className="flex items-start gap-2 text-sm">
                     <MapPin className="h-4 w-4 text-crimson mt-0.5" />
