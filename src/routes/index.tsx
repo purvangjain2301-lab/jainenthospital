@@ -42,7 +42,7 @@ function HomePage() {
               className="inline-flex items-center gap-2 rounded-full bg-white/70 ring-1 ring-border px-3 py-1 text-xs font-semibold uppercase tracking-wider text-primary"
             >
               <Sparkles className="h-3.5 w-3.5 text-crimson" />
-              ENT & Face Surgery Specialist · 17+ years · Worldwide Telemedicine
+              ENT & Head Neck Surgeon with Cancer Care · 18+ years of experience · Worldwide Telemedicine
             </motion.div>
             <motion.h1
               initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6, delay: 0.05 }}
