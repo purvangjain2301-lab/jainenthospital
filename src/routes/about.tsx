@@ -24,7 +24,7 @@ function About() {
       <PageHero
         eyebrow="About"
         title="Decades of ENT expertise, delivered with compassion."
-        subtitle={`Prof. Dr. Devendra M. Jain has spent 17+ years advancing ear, nose, throat, face surgery and head-neck cancer care across academic, surgical, and community settings — and via telemedicine for patients worldwide.`}
+        subtitle={`Prof. Dr. Devendra M. Jain has spent 18+ years of experience advancing ear, nose, throat, face surgery and head-neck cancer care — with 15+ years of experience as a Teaching Professor, alongside surgical and community practice, and worldwide telemedicine.`}
       />
 
       <section className="py-16">
