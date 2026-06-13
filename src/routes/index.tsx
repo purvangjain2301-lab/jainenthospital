@@ -11,13 +11,13 @@ import { CLINIC, telPrimary } from "@/lib/clinic";
 export const Route = createFileRoute("/")({
   head: () => ({
     meta: [
-      { title: "Jain ENT Hospital, Deesa — Prof. Dr. Devendra M. Jain | ENT, Face Surgery & Head-Neck Cancer Specialist" },
-      { name: "description", content: "Advanced ENT, face surgery and head-neck cancer care in Deesa, Gujarat. Worldwide telemedicine available. Led by Prof. Dr. Devendra M. Jain, MBBS MS (ENT), Face Surgeon & Cancer Surgeon. 17+ years experience." },
-      { property: "og:title", content: "Jain ENT Hospital — ENT, Face Surgery & Head-Neck Cancer Specialist" },
-      { property: "og:description", content: "ENT, face surgery & head-neck cancer surgeon in Deesa. Worldwide telemedicine. Book an appointment." },
-      { property: "og:url", content: "/" },
+      { title: "Best ENT Doctor in Deesa | Prof. Dr. Devendra M. Jain | Jain ENT Hospital" },
+      { name: "description", content: "ENT & Head Neck Surgeon with Cancer Care in Deesa, Gujarat. Prof. Dr. Devendra M. Jain — 18+ years of experience, 15+ years as Teaching Professor. Face surgery, head-neck cancer care & worldwide telemedicine." },
+      { property: "og:title", content: "Best ENT Doctor in Deesa | Prof. Dr. Devendra M. Jain" },
+      { property: "og:description", content: "ENT & Head Neck Surgeon with Cancer Care. 18+ years of experience. Face surgery, head-neck cancer care & worldwide telemedicine." },
+      { property: "og:url", content: "https://jainent.lovable.app/" },
     ],
-    links: [{ rel: "canonical", href: "/" }],
+    links: [{ rel: "canonical", href: "https://jainent.lovable.app/" }],
   }),
   component: HomePage,
 });
@@ -42,7 +42,7 @@ function HomePage() {
               className="inline-flex items-center gap-2 rounded-full bg-white/70 ring-1 ring-border px-3 py-1 text-xs font-semibold uppercase tracking-wider text-primary"
             >
               <Sparkles className="h-3.5 w-3.5 text-crimson" />
-              ENT & Face Surgery Specialist · 17+ years · Worldwide Telemedicine
+              ENT & Head Neck Surgeon with Cancer Care · 18+ years of experience · Worldwide Telemedicine
             </motion.div>
             <motion.h1
               initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6, delay: 0.05 }}
@@ -74,7 +74,7 @@ function HomePage() {
             </motion.div>
             <div className="mt-8 grid grid-cols-3 gap-3 max-w-md">
               {[
-                { k: "17+", v: "Years Exp." },
+                { k: "18+", v: "Years Exp." },
                 { k: "MS ENT", v: "Specialist" },
                 { k: "Face & Cancer", v: "Surgery" },
               ].map((s) => (
@@ -111,7 +111,7 @@ function HomePage() {
                   </div>
                   <div className="flex items-center gap-2 text-sm">
                     <ShieldCheck className="h-4 w-4 text-crimson" />
-                    <span>Professor at Banas Medical College, Palanpur</span>
+                    <span>15+ years of experience as a Teaching Professor</span>
                   </div>
                   <div className="flex items-start gap-2 text-sm">
                     <MapPin className="h-4 w-4 text-crimson mt-0.5" />

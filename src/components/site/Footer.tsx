@@ -18,7 +18,7 @@ export function Footer() {
           <p className="mt-5 text-sm leading-relaxed opacity-85 max-w-md">
             Comprehensive ENT, face surgery and head-neck cancer care led by {CLINIC.doctor.name},
             serving patients across India and worldwide via telemedicine, with the clinic based
-            in Deesa, Gujarat. 17+ years of specialist expertise.
+            in Deesa, Gujarat. 18+ years of experience, 15+ years as a Teaching Professor.
           </p>
           <div className="mt-5 flex gap-3">
             <a href={CLINIC.social.facebook} target="_blank" rel="noreferrer"
