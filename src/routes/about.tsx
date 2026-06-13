@@ -7,13 +7,13 @@ import logo from "@/assets/logo.jpg";
 export const Route = createFileRoute("/about")({
   head: () => ({
     meta: [
-      { title: "About Prof. Dr. Devendra M. Jain — Jain ENT Hospital, Deesa" },
-      { name: "description", content: "Prof. Dr. Devendra M. Jain — ENT Specialist, Face Surgeon & Head-Neck Cancer Surgeon. 17+ years experience. Ex-BJ Medical Pune. Telemedicine for patients worldwide." },
-      { property: "og:title", content: "About Prof. Dr. Devendra M. Jain" },
+      { title: "Prof. Dr. Devendra M. Jain - ENT & Head Neck Surgeon with Cancer Care | Deesa" },
+      { name: "description", content: "Prof. Dr. Devendra M. Jain — ENT & Head Neck Surgeon with Cancer Care. 18+ years of experience, 15+ years as Teaching Professor. Ex-BJ Medical Pune. Telemedicine worldwide." },
+      { property: "og:title", content: "Prof. Dr. Devendra M. Jain - ENT & Head Neck Surgeon with Cancer Care" },
       { property: "og:description", content: "ENT, face surgery & head-neck cancer specialist in Deesa, Gujarat. Telemedicine worldwide." },
-      { property: "og:url", content: "/about" },
+      { property: "og:url", content: "https://jainent.lovable.app/about" },
     ],
-    links: [{ rel: "canonical", href: "/about" }],
+    links: [{ rel: "canonical", href: "https://jainent.lovable.app/about" }],
   }),
   component: About,
 });
