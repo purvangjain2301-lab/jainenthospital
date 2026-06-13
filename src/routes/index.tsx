@@ -11,13 +11,13 @@ import { CLINIC, telPrimary } from "@/lib/clinic";
 export const Route = createFileRoute("/")({
   head: () => ({
     meta: [
-      { title: "Jain ENT Hospital, Deesa — Prof. Dr. Devendra M. Jain | ENT, Face Surgery & Head-Neck Cancer Specialist" },
-      { name: "description", content: "Advanced ENT, face surgery and head-neck cancer care in Deesa, Gujarat. Worldwide telemedicine available. Led by Prof. Dr. Devendra M. Jain, MBBS MS (ENT), Face Surgeon & Cancer Surgeon. 17+ years experience." },
-      { property: "og:title", content: "Jain ENT Hospital — ENT, Face Surgery & Head-Neck Cancer Specialist" },
-      { property: "og:description", content: "ENT, face surgery & head-neck cancer surgeon in Deesa. Worldwide telemedicine. Book an appointment." },
-      { property: "og:url", content: "/" },
+      { title: "Best ENT Doctor in Deesa | Prof. Dr. Devendra M. Jain | Jain ENT Hospital" },
+      { name: "description", content: "ENT & Head Neck Surgeon with Cancer Care in Deesa, Gujarat. Prof. Dr. Devendra M. Jain — 18+ years of experience, 15+ years as Teaching Professor. Face surgery, head-neck cancer care & worldwide telemedicine." },
+      { property: "og:title", content: "Best ENT Doctor in Deesa | Prof. Dr. Devendra M. Jain" },
+      { property: "og:description", content: "ENT & Head Neck Surgeon with Cancer Care. 18+ years of experience. Face surgery, head-neck cancer care & worldwide telemedicine." },
+      { property: "og:url", content: "https://jainent.lovable.app/" },
     ],
-    links: [{ rel: "canonical", href: "/" }],
+    links: [{ rel: "canonical", href: "https://jainent.lovable.app/" }],
   }),
   component: HomePage,
 });
