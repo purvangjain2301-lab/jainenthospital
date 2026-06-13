@@ -5,9 +5,10 @@ export const CLINIC = {
     name: "Prof. Dr. Devendra M. Jain",
     short: "Dr. Devendra Jain",
     creds: "MBBS, MS (ENT)",
-    title: "Otorhinolaryngologist, Face Surgeon & Head–Neck Cancer Surgeon",
-    experience: "17+ years",
-    bio: "Senior ENT Specialist with 17+ years of clinical and surgical experience. Ex-BJ Medical College, Pune. Currently Professor & Senior ENT Specialist at Banas Medical College, Palanpur. Specializes in advanced ear, nose, throat, facial cosmetic & reconstructive surgery, and head & neck oncology care. Welcomes patients from across India and worldwide via telemedicine.",
+    title: "ENT & Head Neck Surgeon with Cancer Care",
+    experience: "18+ years of experience",
+    teaching: "15+ years of experience as a Teaching Professor",
+    bio: "Senior ENT Specialist with 18+ years of experience in clinical and surgical practice, including 15+ years of experience as a Teaching Professor. Ex-BJ Medical College, Pune. Specializes in advanced ear, nose, throat, face surgery (cosmetic & reconstructive) and head-neck cancer care. Welcomes patients from across India and worldwide via telemedicine.",
   },
   address: {
     line1: "First Floor, Iskcon Pride",
