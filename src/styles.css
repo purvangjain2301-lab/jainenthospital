@@ -137,4 +137,9 @@
   }
 }
 
-#lovable-badge { display: none !important; }
+html { scroll-behavior: smooth; }
+
+#lovable-badge,
+[id^="lovable-badge"],
+a[href*="lovable.dev"][target="_blank"],
+.lovable-badge { display: none !important; visibility: hidden !important; }
