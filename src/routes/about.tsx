@@ -39,11 +39,11 @@ function About() {
               <p className="text-sm font-semibold text-crimson">Face Surgeon</p>
 
               <div className="mt-5 space-y-2 text-sm">
-                <div className="flex items-center gap-2"><Award className="h-4 w-4 text-crimson" /> 17+ years experience</div>
+                <div className="flex items-center gap-2"><Award className="h-4 w-4 text-crimson" /> 18+ years of experience</div>
                 <div className="flex items-center gap-2"><GraduationCap className="h-4 w-4 text-crimson" /> MBBS, MS — ENT</div>
                 <div className="flex items-center gap-2"><Sparkles className="h-4 w-4 text-crimson" /> Face & Reconstructive Surgery</div>
                 <div className="flex items-center gap-2"><Building2 className="h-4 w-4 text-crimson" /> Ex-BJ Medical College, Pune</div>
-                <div className="flex items-center gap-2"><Users className="h-4 w-4 text-crimson" /> Professor, Banas Medical College</div>
+                <div className="flex items-center gap-2"><Users className="h-4 w-4 text-crimson" /> 15+ years of experience as a Teaching Professor</div>
               </div>
             </div>
           </div>
