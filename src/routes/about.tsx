@@ -62,7 +62,7 @@ function About() {
 
             <div className="grid sm:grid-cols-2 gap-5">
               {[
-                { icon: GraduationCap, t: "Academic excellence", d: "MBBS followed by MS in ENT. Continues to teach and mentor postgraduates at Banas Medical College." },
+                { icon: GraduationCap, t: "Academic excellence", d: "MBBS followed by MS in ENT. 15+ years of experience as a Teaching Professor, continuing to teach and mentor postgraduates." },
                 { icon: Microscope, t: "Cancer surgery experience", d: "Years of focused practice in head-neck oncology — oral, throat, laryngeal, thyroid and salivary gland cancers, including reconstructive procedures." },
                 { icon: Sparkles, t: "Facial surgery expertise", d: "Rhinoplasty, otoplasty, post-cancer reconstruction, facial trauma repair and scar management alongside comprehensive ENT care." },
                 { icon: Stethoscope, t: "Surgical expertise", d: "Endoscopic sinus surgery, ear microsurgery, advanced airway care, and complex referral cases." },
