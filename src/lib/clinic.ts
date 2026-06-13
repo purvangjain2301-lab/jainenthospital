@@ -35,7 +35,7 @@ export const CLINIC = {
     emergency: "Emergency 24×7",
   },
   social: {
-    facebook: "https://www.facebook.com/jainenthospitaldeesa",
+    facebook: "https://share.google/nnGSfq03wLnaikGhn",
     instagram: "https://www.instagram.com/dr_devendra_jain",
     maps: "https://maps.app.goo.gl/XWZ76VQYTcVqBwFd9",
   },
