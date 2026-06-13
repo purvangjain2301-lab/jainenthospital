@@ -74,7 +74,7 @@ function HomePage() {
             </motion.div>
             <div className="mt-8 grid grid-cols-3 gap-3 max-w-md">
               {[
-                { k: "17+", v: "Years Exp." },
+                { k: "18+", v: "Years Exp." },
                 { k: "MS ENT", v: "Specialist" },
                 { k: "Face & Cancer", v: "Surgery" },
               ].map((s) => (
