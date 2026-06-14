@@ -49,8 +49,7 @@ function HomePage() {
               initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6, delay: 0.05 }}
               className="mt-5 font-display text-4xl sm:text-5xl lg:text-6xl font-bold text-primary text-balance leading-[1.05]"
             >
-              Expert care for your{" "}
-              <span className="text-crimson">Ear, Nose, Throat & Face</span> & Head-Neck Health.
+              <span className="text-crimson">ENT Surgeries</span> + Face Surgeries + Cancer Care
             </motion.h1>
             <motion.p
               initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6, delay: 0.1 }}
