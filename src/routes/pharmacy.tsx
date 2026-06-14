@@ -6,13 +6,13 @@ import { Pill, ShieldCheck, Truck, ClipboardList, MessageCircle } from "lucide-r
 export const Route = createFileRoute("/pharmacy")({
   head: () => ({
     meta: [
-      { title: "In-house Pharmacy — Jain ENT Hospital, Deesa" },
-      { name: "description", content: "Genuine, doctor-prescribed ENT medicines available at Jain ENT Hospital pharmacy. Request a refill via WhatsApp." },
+      { title: "Yashvi Medical Store — Pharmacy at Jain ENT Hospital, Deesa" },
+      { name: "description", content: "Yashvi Medical Store — in-house pharmacy at Jain ENT Hospital, Deesa. Genuine ENT and post-op medicines. Refills via WhatsApp." },
       { property: "og:title", content: "Pharmacy — Jain ENT Hospital" },
       { property: "og:description", content: "ENT pharmacy and prescription refills in Deesa." },
-      { property: "og:url", content: "/pharmacy" },
+      { property: "og:url", content: "https://jainent.lovable.app/pharmacy" },
     ],
-    links: [{ rel: "canonical", href: "/pharmacy" }],
+    links: [{ rel: "canonical", href: "https://jainent.lovable.app/pharmacy" }],
   }),
   component: Pharmacy,
 });

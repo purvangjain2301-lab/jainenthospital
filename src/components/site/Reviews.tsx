@@ -58,13 +58,13 @@ export function useApprovedReviews() {
   return { reviews, loading, count, avg };
 }
 
-export function Stars({ value, size = 4 }: { value: number; size?: number }) {
+export function Stars({ value }: { value: number; size?: number }) {
   return (
     <div className="inline-flex gap-0.5" aria-label={`${value} star rating`}>
       {Array.from({ length: 5 }).map((_, i) => (
         <Star
           key={i}
-          className={`h-${size} w-${size} ${i < Math.round(value) ? "fill-gold text-gold" : "text-muted-foreground/30"}`}
+          className={`h-4 w-4 ${i < Math.round(value) ? "fill-gold text-gold" : "text-muted-foreground/30"}`}
         />
       ))}
     </div>
