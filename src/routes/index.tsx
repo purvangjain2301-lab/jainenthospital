@@ -5,6 +5,7 @@ import {
   Calendar, MapPin, Phone, Star, HeartPulse, Microscope,
 } from "lucide-react";
 import { SiteLayout } from "@/components/site/SiteLayout";
+import { ReviewsSection } from "@/components/site/Reviews";
 import logo from "@/assets/logo.jpg";
 import { CLINIC, telPrimary } from "@/lib/clinic";
 
@@ -199,6 +200,9 @@ function HomePage() {
           </div>
         </div>
       </section>
+
+      {/* PATIENT REVIEWS */}
+      <ReviewsSection />
 
       {/* CTA */}
       <section className="py-20">

@@ -15,6 +15,7 @@ const NAV = [
   { to: "/post-op-care", label: "Post-Op Care" },
   { to: "/blog", label: "Blog" },
   { to: "/gallery", label: "Gallery" },
+  { to: "/feedback", label: "Reviews" },
   { to: "/contact", label: "Contact" },
   { to: "/my-appointments", label: "My Appts", icon: true },
 ] as const;
