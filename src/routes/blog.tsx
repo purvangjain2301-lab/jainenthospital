@@ -1,19 +1,21 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
 import { SiteLayout, PageHero } from "@/components/site/SiteLayout";
+import { Breadcrumbs } from "@/components/site/Breadcrumbs";
 import { Calendar, ArrowRight } from "lucide-react";
 import { supabase, type BlogPost } from "@/lib/supabase";
+import { abs } from "@/lib/site-content";
 
 export const Route = createFileRoute("/blog")({
   head: () => ({
     meta: [
-      { title: "ENT Health Blog — Jain ENT Hospital, Deesa" },
-      { name: "description", content: "Articles by Dr. Devendra Jain on ear, nose, throat, voice, sleep and head-neck cancer awareness." },
-      { property: "og:title", content: "ENT Health Blog — Jain ENT Hospital" },
-      { property: "og:description", content: "ENT awareness articles for patients." },
-      { property: "og:url", content: "/blog" },
+      { title: "ENT Health Tips & Articles | Jain ENT Hospital Deesa" },
+      { name: "description", content: "Practical ENT health articles, post-op care guides, and patient education from Prof. Dr. Devendra M. Jain, Deesa." },
+      { property: "og:title", content: "ENT Health Tips & Articles | Jain ENT Hospital Deesa" },
+      { property: "og:description", content: "ENT awareness articles for patients from Jain ENT Hospital, Deesa." },
+      { property: "og:url", content: abs("/blog") },
     ],
-    links: [{ rel: "canonical", href: "/blog" }],
+    links: [{ rel: "canonical", href: abs("/blog") }],
   }),
   component: Blog,
 });
@@ -47,6 +49,7 @@ function Blog() {
 
   return (
     <SiteLayout>
+      <Breadcrumbs items={[{ label: "Blog", to: "/blog" }]} />
       <PageHero
         eyebrow="Blog"
         title="ENT awareness, written by your doctor."
@@ -54,26 +57,43 @@ function Blog() {
       />
       <section className="py-14">
         <div className="container-tight grid md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {display.map((p) => (
-            <article key={p.id} className="group rounded-2xl ring-1 ring-border bg-white p-6 hover:ring-primary transition flex flex-col">
-              <div className="flex items-center gap-3 text-xs text-muted-foreground">
-                <span className="rounded-full bg-crimson/10 text-crimson px-2 py-0.5 font-semibold uppercase tracking-wider">
-                  {p.category}
+          {display.map((p) => {
+            const isSeed = p.id.startsWith("seed-");
+            const Card = (
+              <>
+                <div className="flex items-center gap-3 text-xs text-muted-foreground">
+                  <span className="rounded-full bg-crimson/10 text-crimson px-2 py-0.5 font-semibold uppercase tracking-wider">
+                    {p.category}
+                  </span>
+                  <span className="inline-flex items-center gap-1">
+                    <Calendar className="h-3 w-3" />
+                    {new Date(p.created_at).toLocaleDateString("en-IN", { day: "numeric", month: "short", year: "numeric" })}
+                  </span>
+                </div>
+                <h2 className="mt-3 font-display text-xl font-bold text-primary group-hover:text-crimson transition">
+                  {p.title}
+                </h2>
+                <p className="mt-2 text-sm text-muted-foreground flex-1">{p.excerpt}</p>
+                <span className="mt-4 inline-flex items-center gap-1 text-sm font-semibold text-primary">
+                  Read more <ArrowRight className="h-4 w-4" />
                 </span>
-                <span className="inline-flex items-center gap-1">
-                  <Calendar className="h-3 w-3" />
-                  {new Date(p.created_at).toLocaleDateString("en-IN", { day: "numeric", month: "short", year: "numeric" })}
-                </span>
-              </div>
-              <h2 className="mt-3 font-display text-xl font-bold text-primary group-hover:text-crimson transition">
-                {p.title}
-              </h2>
-              <p className="mt-2 text-sm text-muted-foreground flex-1">{p.excerpt}</p>
-              <Link to="/blog" className="mt-4 inline-flex items-center gap-1 text-sm font-semibold text-primary">
-                Read more <ArrowRight className="h-4 w-4" />
+              </>
+            );
+            return isSeed ? (
+              <article key={p.id} className="rounded-2xl ring-1 ring-border bg-white p-6 flex flex-col opacity-70">
+                {Card}
+              </article>
+            ) : (
+              <Link
+                key={p.id}
+                to="/blog/$slug"
+                params={{ slug: p.slug }}
+                className="group rounded-2xl ring-1 ring-border bg-white p-6 hover:ring-primary transition flex flex-col"
+              >
+                {Card}
               </Link>
-            </article>
-          ))}
+            );
+          })}
         </div>
         <p className="container-tight mt-10 text-sm text-muted-foreground text-center">
           New articles published monthly. Topic suggestions welcome — message us on WhatsApp.

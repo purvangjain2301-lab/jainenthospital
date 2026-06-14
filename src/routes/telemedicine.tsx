@@ -9,9 +9,9 @@ export const Route = createFileRoute("/telemedicine")({
       { name: "description", content: "Online ENT consultations with Prof. Dr. Devendra M. Jain. Available to patients across India and worldwide. Hindi, English, Gujarati, Marathi." },
       { property: "og:title", content: "ENT Telemedicine — Jain ENT Hospital" },
       { property: "og:description", content: "Online ENT consultations from anywhere in India and abroad." },
-      { property: "og:url", content: "/telemedicine" },
+      { property: "og:url", content: "https://jainent.lovable.app/telemedicine" },
     ],
-    links: [{ rel: "canonical", href: "/telemedicine" }],
+    links: [{ rel: "canonical", href: "https://jainent.lovable.app/telemedicine" }],
   }),
   component: Telemed,
 });

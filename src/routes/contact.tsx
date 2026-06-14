@@ -10,9 +10,9 @@ export const Route = createFileRoute("/contact")({
       { name: "description", content: "Address, phone, WhatsApp, email and directions to Jain ENT Hospital, Deesa. Mon–Sat 10 AM–7 PM. Emergency 24×7." },
       { property: "og:title", content: "Contact — Jain ENT Hospital" },
       { property: "og:description", content: "Reach us by phone, WhatsApp, or in person." },
-      { property: "og:url", content: "/contact" },
+      { property: "og:url", content: "https://jainent.lovable.app/contact" },
     ],
-    links: [{ rel: "canonical", href: "/contact" }],
+    links: [{ rel: "canonical", href: "https://jainent.lovable.app/contact" }],
   }),
   component: Contact,
 });

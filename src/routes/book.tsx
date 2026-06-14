@@ -11,13 +11,13 @@ import { supabase } from "@/lib/supabase";
 export const Route = createFileRoute("/book")({
   head: () => ({
     meta: [
-      { title: "Book Appointment — Jain ENT Hospital, Deesa" },
-      { name: "description", content: "Reserve an ENT, face surgery or cancer consultation with Prof. Dr. Devendra M. Jain in Deesa, or via telemedicine from anywhere. Mon–Sat 10 AM–7 PM." },
-      { property: "og:title", content: "Book Appointment — Jain ENT Hospital" },
+      { title: "Book ENT Appointment in Deesa | Jain ENT Hospital" },
+      { name: "description", content: "Book your ENT appointment online with Prof. Dr. Devendra M. Jain in Deesa. Clinic visit or telemedicine from anywhere. Mon–Sat 10 AM–7 PM." },
+      { property: "og:title", content: "Book ENT Appointment in Deesa | Jain ENT Hospital" },
       { property: "og:description", content: "Reserve your ENT or face-surgery consult in Deesa, or worldwide via telemedicine." },
-      { property: "og:url", content: "/book" },
+      { property: "og:url", content: "https://jainent.lovable.app/book" },
     ],
-    links: [{ rel: "canonical", href: "/book" }],
+    links: [{ rel: "canonical", href: "https://jainent.lovable.app/book" }],
   }),
   component: Book,
 });

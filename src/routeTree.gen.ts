@@ -9,21 +9,44 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
+import { Route as VertigoTreatmentDeesaRouteImport } from './routes/vertigo-treatment-deesa'
+import { Route as TonsilSurgeryDeesaRouteImport } from './routes/tonsil-surgery-deesa'
 import { Route as TelemedicineRouteImport } from './routes/telemedicine'
 import { Route as SitemapDotxmlRouteImport } from './routes/sitemap[.]xml'
+import { Route as SinusitisTreatmentDeesaRouteImport } from './routes/sinusitis-treatment-deesa'
 import { Route as ServicesRouteImport } from './routes/services'
 import { Route as PostOpCareRouteImport } from './routes/post-op-care'
 import { Route as PharmacyRouteImport } from './routes/pharmacy'
 import { Route as PatientInfoRouteImport } from './routes/patient-info'
 import { Route as MyAppointmentsRouteImport } from './routes/my-appointments'
+import { Route as HearingLossTreatmentDeesaRouteImport } from './routes/hearing-loss-treatment-deesa'
+import { Route as HeadNeckCancerSurgeonGujaratRouteImport } from './routes/head-neck-cancer-surgeon-gujarat'
 import { Route as GalleryRouteImport } from './routes/gallery'
+import { Route as FeedbackRouteImport } from './routes/feedback'
+import { Route as FaceSurgeryDeesaRouteImport } from './routes/face-surgery-deesa'
+import { Route as EntSpecialistBanaskanthaRouteImport } from './routes/ent-specialist-banaskantha'
+import { Route as EntHospitalDeesaRouteImport } from './routes/ent-hospital-deesa'
+import { Route as EntDoctorPalanpurRouteImport } from './routes/ent-doctor-palanpur'
+import { Route as EntDoctorDhaneraRouteImport } from './routes/ent-doctor-dhanera'
+import { Route as EntDoctorDeesaRouteImport } from './routes/ent-doctor-deesa'
 import { Route as ContactRouteImport } from './routes/contact'
 import { Route as BookRouteImport } from './routes/book'
 import { Route as BlogRouteImport } from './routes/blog'
 import { Route as AdminRouteImport } from './routes/admin'
 import { Route as AboutRouteImport } from './routes/about'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as BlogSlugRouteImport } from './routes/blog.$slug'
 
+const VertigoTreatmentDeesaRoute = VertigoTreatmentDeesaRouteImport.update({
+  id: '/vertigo-treatment-deesa',
+  path: '/vertigo-treatment-deesa',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const TonsilSurgeryDeesaRoute = TonsilSurgeryDeesaRouteImport.update({
+  id: '/tonsil-surgery-deesa',
+  path: '/tonsil-surgery-deesa',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const TelemedicineRoute = TelemedicineRouteImport.update({
   id: '/telemedicine',
   path: '/telemedicine',
@@ -32,6 +55,11 @@ const TelemedicineRoute = TelemedicineRouteImport.update({
 const SitemapDotxmlRoute = SitemapDotxmlRouteImport.update({
   id: '/sitemap.xml',
   path: '/sitemap.xml',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const SinusitisTreatmentDeesaRoute = SinusitisTreatmentDeesaRouteImport.update({
+  id: '/sinusitis-treatment-deesa',
+  path: '/sinusitis-treatment-deesa',
   getParentRoute: () => rootRouteImport,
 } as any)
 const ServicesRoute = ServicesRouteImport.update({
@@ -59,9 +87,57 @@ const MyAppointmentsRoute = MyAppointmentsRouteImport.update({
   path: '/my-appointments',
   getParentRoute: () => rootRouteImport,
 } as any)
+const HearingLossTreatmentDeesaRoute =
+  HearingLossTreatmentDeesaRouteImport.update({
+    id: '/hearing-loss-treatment-deesa',
+    path: '/hearing-loss-treatment-deesa',
+    getParentRoute: () => rootRouteImport,
+  } as any)
+const HeadNeckCancerSurgeonGujaratRoute =
+  HeadNeckCancerSurgeonGujaratRouteImport.update({
+    id: '/head-neck-cancer-surgeon-gujarat',
+    path: '/head-neck-cancer-surgeon-gujarat',
+    getParentRoute: () => rootRouteImport,
+  } as any)
 const GalleryRoute = GalleryRouteImport.update({
   id: '/gallery',
   path: '/gallery',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const FeedbackRoute = FeedbackRouteImport.update({
+  id: '/feedback',
+  path: '/feedback',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const FaceSurgeryDeesaRoute = FaceSurgeryDeesaRouteImport.update({
+  id: '/face-surgery-deesa',
+  path: '/face-surgery-deesa',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const EntSpecialistBanaskanthaRoute =
+  EntSpecialistBanaskanthaRouteImport.update({
+    id: '/ent-specialist-banaskantha',
+    path: '/ent-specialist-banaskantha',
+    getParentRoute: () => rootRouteImport,
+  } as any)
+const EntHospitalDeesaRoute = EntHospitalDeesaRouteImport.update({
+  id: '/ent-hospital-deesa',
+  path: '/ent-hospital-deesa',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const EntDoctorPalanpurRoute = EntDoctorPalanpurRouteImport.update({
+  id: '/ent-doctor-palanpur',
+  path: '/ent-doctor-palanpur',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const EntDoctorDhaneraRoute = EntDoctorDhaneraRouteImport.update({
+  id: '/ent-doctor-dhanera',
+  path: '/ent-doctor-dhanera',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const EntDoctorDeesaRoute = EntDoctorDeesaRouteImport.update({
+  id: '/ent-doctor-deesa',
+  path: '/ent-doctor-deesa',
   getParentRoute: () => rootRouteImport,
 } as any)
 const ContactRoute = ContactRouteImport.update({
@@ -94,55 +170,99 @@ const IndexRoute = IndexRouteImport.update({
   path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
+const BlogSlugRoute = BlogSlugRouteImport.update({
+  id: '/$slug',
+  path: '/$slug',
+  getParentRoute: () => BlogRoute,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/about': typeof AboutRoute
   '/admin': typeof AdminRoute
-  '/blog': typeof BlogRoute
+  '/blog': typeof BlogRouteWithChildren
   '/book': typeof BookRoute
   '/contact': typeof ContactRoute
+  '/ent-doctor-deesa': typeof EntDoctorDeesaRoute
+  '/ent-doctor-dhanera': typeof EntDoctorDhaneraRoute
+  '/ent-doctor-palanpur': typeof EntDoctorPalanpurRoute
+  '/ent-hospital-deesa': typeof EntHospitalDeesaRoute
+  '/ent-specialist-banaskantha': typeof EntSpecialistBanaskanthaRoute
+  '/face-surgery-deesa': typeof FaceSurgeryDeesaRoute
+  '/feedback': typeof FeedbackRoute
   '/gallery': typeof GalleryRoute
+  '/head-neck-cancer-surgeon-gujarat': typeof HeadNeckCancerSurgeonGujaratRoute
+  '/hearing-loss-treatment-deesa': typeof HearingLossTreatmentDeesaRoute
   '/my-appointments': typeof MyAppointmentsRoute
   '/patient-info': typeof PatientInfoRoute
   '/pharmacy': typeof PharmacyRoute
   '/post-op-care': typeof PostOpCareRoute
   '/services': typeof ServicesRoute
+  '/sinusitis-treatment-deesa': typeof SinusitisTreatmentDeesaRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
   '/telemedicine': typeof TelemedicineRoute
+  '/tonsil-surgery-deesa': typeof TonsilSurgeryDeesaRoute
+  '/vertigo-treatment-deesa': typeof VertigoTreatmentDeesaRoute
+  '/blog/$slug': typeof BlogSlugRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/about': typeof AboutRoute
   '/admin': typeof AdminRoute
-  '/blog': typeof BlogRoute
+  '/blog': typeof BlogRouteWithChildren
   '/book': typeof BookRoute
   '/contact': typeof ContactRoute
+  '/ent-doctor-deesa': typeof EntDoctorDeesaRoute
+  '/ent-doctor-dhanera': typeof EntDoctorDhaneraRoute
+  '/ent-doctor-palanpur': typeof EntDoctorPalanpurRoute
+  '/ent-hospital-deesa': typeof EntHospitalDeesaRoute
+  '/ent-specialist-banaskantha': typeof EntSpecialistBanaskanthaRoute
+  '/face-surgery-deesa': typeof FaceSurgeryDeesaRoute
+  '/feedback': typeof FeedbackRoute
   '/gallery': typeof GalleryRoute
+  '/head-neck-cancer-surgeon-gujarat': typeof HeadNeckCancerSurgeonGujaratRoute
+  '/hearing-loss-treatment-deesa': typeof HearingLossTreatmentDeesaRoute
   '/my-appointments': typeof MyAppointmentsRoute
   '/patient-info': typeof PatientInfoRoute
   '/pharmacy': typeof PharmacyRoute
   '/post-op-care': typeof PostOpCareRoute
   '/services': typeof ServicesRoute
+  '/sinusitis-treatment-deesa': typeof SinusitisTreatmentDeesaRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
   '/telemedicine': typeof TelemedicineRoute
+  '/tonsil-surgery-deesa': typeof TonsilSurgeryDeesaRoute
+  '/vertigo-treatment-deesa': typeof VertigoTreatmentDeesaRoute
+  '/blog/$slug': typeof BlogSlugRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
   '/about': typeof AboutRoute
   '/admin': typeof AdminRoute
-  '/blog': typeof BlogRoute
+  '/blog': typeof BlogRouteWithChildren
   '/book': typeof BookRoute
   '/contact': typeof ContactRoute
+  '/ent-doctor-deesa': typeof EntDoctorDeesaRoute
+  '/ent-doctor-dhanera': typeof EntDoctorDhaneraRoute
+  '/ent-doctor-palanpur': typeof EntDoctorPalanpurRoute
+  '/ent-hospital-deesa': typeof EntHospitalDeesaRoute
+  '/ent-specialist-banaskantha': typeof EntSpecialistBanaskanthaRoute
+  '/face-surgery-deesa': typeof FaceSurgeryDeesaRoute
+  '/feedback': typeof FeedbackRoute
   '/gallery': typeof GalleryRoute
+  '/head-neck-cancer-surgeon-gujarat': typeof HeadNeckCancerSurgeonGujaratRoute
+  '/hearing-loss-treatment-deesa': typeof HearingLossTreatmentDeesaRoute
   '/my-appointments': typeof MyAppointmentsRoute
   '/patient-info': typeof PatientInfoRoute
   '/pharmacy': typeof PharmacyRoute
   '/post-op-care': typeof PostOpCareRoute
   '/services': typeof ServicesRoute
+  '/sinusitis-treatment-deesa': typeof SinusitisTreatmentDeesaRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
   '/telemedicine': typeof TelemedicineRoute
+  '/tonsil-surgery-deesa': typeof TonsilSurgeryDeesaRoute
+  '/vertigo-treatment-deesa': typeof VertigoTreatmentDeesaRoute
+  '/blog/$slug': typeof BlogSlugRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -153,14 +273,27 @@ export interface FileRouteTypes {
     | '/blog'
     | '/book'
     | '/contact'
+    | '/ent-doctor-deesa'
+    | '/ent-doctor-dhanera'
+    | '/ent-doctor-palanpur'
+    | '/ent-hospital-deesa'
+    | '/ent-specialist-banaskantha'
+    | '/face-surgery-deesa'
+    | '/feedback'
     | '/gallery'
+    | '/head-neck-cancer-surgeon-gujarat'
+    | '/hearing-loss-treatment-deesa'
     | '/my-appointments'
     | '/patient-info'
     | '/pharmacy'
     | '/post-op-care'
     | '/services'
+    | '/sinusitis-treatment-deesa'
     | '/sitemap.xml'
     | '/telemedicine'
+    | '/tonsil-surgery-deesa'
+    | '/vertigo-treatment-deesa'
+    | '/blog/$slug'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
@@ -169,14 +302,27 @@ export interface FileRouteTypes {
     | '/blog'
     | '/book'
     | '/contact'
+    | '/ent-doctor-deesa'
+    | '/ent-doctor-dhanera'
+    | '/ent-doctor-palanpur'
+    | '/ent-hospital-deesa'
+    | '/ent-specialist-banaskantha'
+    | '/face-surgery-deesa'
+    | '/feedback'
     | '/gallery'
+    | '/head-neck-cancer-surgeon-gujarat'
+    | '/hearing-loss-treatment-deesa'
     | '/my-appointments'
     | '/patient-info'
     | '/pharmacy'
     | '/post-op-care'
     | '/services'
+    | '/sinusitis-treatment-deesa'
     | '/sitemap.xml'
     | '/telemedicine'
+    | '/tonsil-surgery-deesa'
+    | '/vertigo-treatment-deesa'
+    | '/blog/$slug'
   id:
     | '__root__'
     | '/'
@@ -185,35 +331,74 @@ export interface FileRouteTypes {
     | '/blog'
     | '/book'
     | '/contact'
+    | '/ent-doctor-deesa'
+    | '/ent-doctor-dhanera'
+    | '/ent-doctor-palanpur'
+    | '/ent-hospital-deesa'
+    | '/ent-specialist-banaskantha'
+    | '/face-surgery-deesa'
+    | '/feedback'
     | '/gallery'
+    | '/head-neck-cancer-surgeon-gujarat'
+    | '/hearing-loss-treatment-deesa'
     | '/my-appointments'
     | '/patient-info'
     | '/pharmacy'
     | '/post-op-care'
     | '/services'
+    | '/sinusitis-treatment-deesa'
     | '/sitemap.xml'
     | '/telemedicine'
+    | '/tonsil-surgery-deesa'
+    | '/vertigo-treatment-deesa'
+    | '/blog/$slug'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   AboutRoute: typeof AboutRoute
   AdminRoute: typeof AdminRoute
-  BlogRoute: typeof BlogRoute
+  BlogRoute: typeof BlogRouteWithChildren
   BookRoute: typeof BookRoute
   ContactRoute: typeof ContactRoute
+  EntDoctorDeesaRoute: typeof EntDoctorDeesaRoute
+  EntDoctorDhaneraRoute: typeof EntDoctorDhaneraRoute
+  EntDoctorPalanpurRoute: typeof EntDoctorPalanpurRoute
+  EntHospitalDeesaRoute: typeof EntHospitalDeesaRoute
+  EntSpecialistBanaskanthaRoute: typeof EntSpecialistBanaskanthaRoute
+  FaceSurgeryDeesaRoute: typeof FaceSurgeryDeesaRoute
+  FeedbackRoute: typeof FeedbackRoute
   GalleryRoute: typeof GalleryRoute
+  HeadNeckCancerSurgeonGujaratRoute: typeof HeadNeckCancerSurgeonGujaratRoute
+  HearingLossTreatmentDeesaRoute: typeof HearingLossTreatmentDeesaRoute
   MyAppointmentsRoute: typeof MyAppointmentsRoute
   PatientInfoRoute: typeof PatientInfoRoute
   PharmacyRoute: typeof PharmacyRoute
   PostOpCareRoute: typeof PostOpCareRoute
   ServicesRoute: typeof ServicesRoute
+  SinusitisTreatmentDeesaRoute: typeof SinusitisTreatmentDeesaRoute
   SitemapDotxmlRoute: typeof SitemapDotxmlRoute
   TelemedicineRoute: typeof TelemedicineRoute
+  TonsilSurgeryDeesaRoute: typeof TonsilSurgeryDeesaRoute
+  VertigoTreatmentDeesaRoute: typeof VertigoTreatmentDeesaRoute
 }
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
+    '/vertigo-treatment-deesa': {
+      id: '/vertigo-treatment-deesa'
+      path: '/vertigo-treatment-deesa'
+      fullPath: '/vertigo-treatment-deesa'
+      preLoaderRoute: typeof VertigoTreatmentDeesaRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/tonsil-surgery-deesa': {
+      id: '/tonsil-surgery-deesa'
+      path: '/tonsil-surgery-deesa'
+      fullPath: '/tonsil-surgery-deesa'
+      preLoaderRoute: typeof TonsilSurgeryDeesaRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/telemedicine': {
       id: '/telemedicine'
       path: '/telemedicine'
@@ -226,6 +411,13 @@ declare module '@tanstack/react-router' {
       path: '/sitemap.xml'
       fullPath: '/sitemap.xml'
       preLoaderRoute: typeof SitemapDotxmlRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/sinusitis-treatment-deesa': {
+      id: '/sinusitis-treatment-deesa'
+      path: '/sinusitis-treatment-deesa'
+      fullPath: '/sinusitis-treatment-deesa'
+      preLoaderRoute: typeof SinusitisTreatmentDeesaRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/services': {
@@ -263,11 +455,74 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof MyAppointmentsRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/hearing-loss-treatment-deesa': {
+      id: '/hearing-loss-treatment-deesa'
+      path: '/hearing-loss-treatment-deesa'
+      fullPath: '/hearing-loss-treatment-deesa'
+      preLoaderRoute: typeof HearingLossTreatmentDeesaRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/head-neck-cancer-surgeon-gujarat': {
+      id: '/head-neck-cancer-surgeon-gujarat'
+      path: '/head-neck-cancer-surgeon-gujarat'
+      fullPath: '/head-neck-cancer-surgeon-gujarat'
+      preLoaderRoute: typeof HeadNeckCancerSurgeonGujaratRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/gallery': {
       id: '/gallery'
       path: '/gallery'
       fullPath: '/gallery'
       preLoaderRoute: typeof GalleryRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/feedback': {
+      id: '/feedback'
+      path: '/feedback'
+      fullPath: '/feedback'
+      preLoaderRoute: typeof FeedbackRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/face-surgery-deesa': {
+      id: '/face-surgery-deesa'
+      path: '/face-surgery-deesa'
+      fullPath: '/face-surgery-deesa'
+      preLoaderRoute: typeof FaceSurgeryDeesaRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/ent-specialist-banaskantha': {
+      id: '/ent-specialist-banaskantha'
+      path: '/ent-specialist-banaskantha'
+      fullPath: '/ent-specialist-banaskantha'
+      preLoaderRoute: typeof EntSpecialistBanaskanthaRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/ent-hospital-deesa': {
+      id: '/ent-hospital-deesa'
+      path: '/ent-hospital-deesa'
+      fullPath: '/ent-hospital-deesa'
+      preLoaderRoute: typeof EntHospitalDeesaRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/ent-doctor-palanpur': {
+      id: '/ent-doctor-palanpur'
+      path: '/ent-doctor-palanpur'
+      fullPath: '/ent-doctor-palanpur'
+      preLoaderRoute: typeof EntDoctorPalanpurRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/ent-doctor-dhanera': {
+      id: '/ent-doctor-dhanera'
+      path: '/ent-doctor-dhanera'
+      fullPath: '/ent-doctor-dhanera'
+      preLoaderRoute: typeof EntDoctorDhaneraRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/ent-doctor-deesa': {
+      id: '/ent-doctor-deesa'
+      path: '/ent-doctor-deesa'
+      fullPath: '/ent-doctor-deesa'
+      preLoaderRoute: typeof EntDoctorDeesaRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/contact': {
@@ -312,35 +567,54 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/blog/$slug': {
+      id: '/blog/$slug'
+      path: '/$slug'
+      fullPath: '/blog/$slug'
+      preLoaderRoute: typeof BlogSlugRouteImport
+      parentRoute: typeof BlogRoute
+    }
   }
 }
+
+interface BlogRouteChildren {
+  BlogSlugRoute: typeof BlogSlugRoute
+}
+
+const BlogRouteChildren: BlogRouteChildren = {
+  BlogSlugRoute: BlogSlugRoute,
+}
+
+const BlogRouteWithChildren = BlogRoute._addFileChildren(BlogRouteChildren)
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   AboutRoute: AboutRoute,
   AdminRoute: AdminRoute,
-  BlogRoute: BlogRoute,
+  BlogRoute: BlogRouteWithChildren,
   BookRoute: BookRoute,
   ContactRoute: ContactRoute,
+  EntDoctorDeesaRoute: EntDoctorDeesaRoute,
+  EntDoctorDhaneraRoute: EntDoctorDhaneraRoute,
+  EntDoctorPalanpurRoute: EntDoctorPalanpurRoute,
+  EntHospitalDeesaRoute: EntHospitalDeesaRoute,
+  EntSpecialistBanaskanthaRoute: EntSpecialistBanaskanthaRoute,
+  FaceSurgeryDeesaRoute: FaceSurgeryDeesaRoute,
+  FeedbackRoute: FeedbackRoute,
   GalleryRoute: GalleryRoute,
+  HeadNeckCancerSurgeonGujaratRoute: HeadNeckCancerSurgeonGujaratRoute,
+  HearingLossTreatmentDeesaRoute: HearingLossTreatmentDeesaRoute,
   MyAppointmentsRoute: MyAppointmentsRoute,
   PatientInfoRoute: PatientInfoRoute,
   PharmacyRoute: PharmacyRoute,
   PostOpCareRoute: PostOpCareRoute,
   ServicesRoute: ServicesRoute,
+  SinusitisTreatmentDeesaRoute: SinusitisTreatmentDeesaRoute,
   SitemapDotxmlRoute: SitemapDotxmlRoute,
   TelemedicineRoute: TelemedicineRoute,
+  TonsilSurgeryDeesaRoute: TonsilSurgeryDeesaRoute,
+  VertigoTreatmentDeesaRoute: VertigoTreatmentDeesaRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
   ._addFileTypes<FileRouteTypes>()
-
-import type { getRouter } from './router.tsx'
-import type { startInstance } from './start.ts'
-declare module '@tanstack/react-start' {
-  interface Register {
-    ssr: true
-    router: Awaited<ReturnType<typeof getRouter>>
-    config: Awaited<ReturnType<typeof startInstance.getOptions>>
-  }
-}

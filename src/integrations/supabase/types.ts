@@ -72,9 +72,13 @@ export type Database = {
         Row: {
           category: string
           content: string | null
+          cover_image: string | null
           created_at: string
           excerpt: string | null
           id: string
+          meta_description: string | null
+          meta_title: string | null
+          og_image: string | null
           published: boolean
           slug: string
           title: string
@@ -82,9 +86,13 @@ export type Database = {
         Insert: {
           category: string
           content?: string | null
+          cover_image?: string | null
           created_at?: string
           excerpt?: string | null
           id?: string
+          meta_description?: string | null
+          meta_title?: string | null
+          og_image?: string | null
           published?: boolean
           slug: string
           title: string
@@ -92,9 +100,13 @@ export type Database = {
         Update: {
           category?: string
           content?: string | null
+          cover_image?: string | null
           created_at?: string
           excerpt?: string | null
           id?: string
+          meta_description?: string | null
+          meta_title?: string | null
+          og_image?: string | null
           published?: boolean
           slug?: string
           title?: string
@@ -133,19 +145,85 @@ export type Database = {
           created_at: string
           id: string
           label: string
+          sort_order: number
           url: string
         }
         Insert: {
           created_at?: string
           id?: string
           label: string
+          sort_order?: number
           url: string
         }
         Update: {
           created_at?: string
           id?: string
           label?: string
+          sort_order?: number
           url?: string
+        }
+        Relationships: []
+      }
+      reviews: {
+        Row: {
+          admin_reply: string | null
+          body: string
+          created_at: string
+          id: string
+          patient_name: string
+          phone: string | null
+          rating: number
+          reply_draft: string | null
+          status: string
+          updated_at: string
+          visit_date: string | null
+        }
+        Insert: {
+          admin_reply?: string | null
+          body: string
+          created_at?: string
+          id?: string
+          patient_name: string
+          phone?: string | null
+          rating: number
+          reply_draft?: string | null
+          status?: string
+          updated_at?: string
+          visit_date?: string | null
+        }
+        Update: {
+          admin_reply?: string | null
+          body?: string
+          created_at?: string
+          id?: string
+          patient_name?: string
+          phone?: string | null
+          rating?: number
+          reply_draft?: string | null
+          status?: string
+          updated_at?: string
+          visit_date?: string | null
+        }
+        Relationships: []
+      }
+      site_content: {
+        Row: {
+          id: string
+          key: string
+          updated_at: string
+          value: Json
+        }
+        Insert: {
+          id?: string
+          key: string
+          updated_at?: string
+          value?: Json
+        }
+        Update: {
+          id?: string
+          key?: string
+          updated_at?: string
+          value?: Json
         }
         Relationships: []
       }

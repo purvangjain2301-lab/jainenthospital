@@ -26,13 +26,13 @@ const FACE_FAQ = [
 export const Route = createFileRoute("/services")({
   head: () => ({
     meta: [
-      { title: "ENT & Face Surgery Services — Jain ENT Hospital, Deesa" },
-      { name: "description", content: "Full-spectrum ENT & face surgery: rhinoplasty, otoplasty, ear surgery, sinus, voice, head-neck cancer. Clinic in Deesa, Gujarat. Telemedicine available worldwide." },
-      { property: "og:title", content: "Services — Jain ENT Hospital" },
+      { title: "ENT Services in Deesa Gujarat | Jain ENT Hospital" },
+      { name: "description", content: "Complete ENT, face surgery and head-neck cancer services in Deesa: sinus, ear, throat, vertigo, hearing, snoring, oncology and more." },
+      { property: "og:title", content: "ENT Services in Deesa Gujarat | Jain ENT Hospital" },
       { property: "og:description", content: "Comprehensive ENT, face surgery and head-neck cancer services." },
-      { property: "og:url", content: "/services" },
+      { property: "og:url", content: "https://jainent.lovable.app/services" },
     ],
-    links: [{ rel: "canonical", href: "/services" }],
+    links: [{ rel: "canonical", href: "https://jainent.lovable.app/services" }],
   }),
   component: Services,
 });
