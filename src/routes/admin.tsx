@@ -4,8 +4,11 @@ import {
   LayoutDashboard, Image as ImageIcon, BookOpen, CalendarCheck, LogOut,
   Plus, Trash2, Eye, EyeOff, Upload, CheckCircle2, XCircle,
   Clock, Users, TrendingUp, FileText, Lock, Mail, ShieldAlert,
+  Settings, MessageSquare,
 } from "lucide-react";
 import { supabase, type GalleryItem, type BlogPost, type BlogPostDraft, type Appointment } from "@/lib/supabase";
+import { ContentTab } from "@/components/admin/ContentTab";
+import { ReviewsTab } from "@/components/admin/ReviewsTab";
 
 // ── Route ────────────────────────────────────────────────────────────────────
 export const Route = createFileRoute("/admin")({
@@ -149,13 +152,15 @@ function NotAuthorized({ email, onLogout }: { email: string; onLogout: () => voi
 }
 
 // ── Shell ─────────────────────────────────────────────────────────────────────
-type Tab = "dashboard" | "gallery" | "blog" | "appointments";
+type Tab = "dashboard" | "content" | "reviews" | "gallery" | "blog" | "appointments";
 
 function AdminShell({ email, onLogout }: { email: string; onLogout: () => void }) {
   const [tab, setTab] = useState<Tab>("dashboard");
 
   const nav: { id: Tab; label: string; icon: React.ElementType }[] = [
     { id: "dashboard",    label: "Dashboard",    icon: LayoutDashboard },
+    { id: "content",      label: "Content (CMS)", icon: Settings },
+    { id: "reviews",      label: "Reviews",      icon: MessageSquare },
     { id: "gallery",      label: "Gallery",      icon: ImageIcon },
     { id: "blog",         label: "Blog",         icon: BookOpen },
     { id: "appointments", label: "Appointments", icon: CalendarCheck },
@@ -196,6 +201,8 @@ function AdminShell({ email, onLogout }: { email: string; onLogout: () => void }
       <main className="flex-1 overflow-auto pt-[52px] md:pt-0">
         <div className="p-6 max-w-5xl mx-auto">
           {tab === "dashboard"    && <DashboardTab />}
+          {tab === "content"      && <ContentTab />}
+          {tab === "reviews"      && <ReviewsTab />}
           {tab === "gallery"      && <GalleryTab />}
           {tab === "blog"         && <BlogTab />}
           {tab === "appointments" && <AppointmentsTab />}
