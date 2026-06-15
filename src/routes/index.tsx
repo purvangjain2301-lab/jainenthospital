@@ -28,7 +28,7 @@ const SERVICES = [
   { icon: HeartPulse, title: "Nose & Sinus", desc: "Sinusitis, allergies, deviated septum, endoscopic surgery." },
   { icon: Stethoscope, title: "Throat & Voice", desc: "Tonsils, adenoids, hoarseness, snoring, sleep apnoea." },
   { icon: Sparkles, title: "Face Surgery", desc: "Rhinoplasty, otoplasty, facial trauma repair & post-cancer reconstruction." },
-  { icon: Microscope, title: "Head-Neck Cancer", desc: "Oncology-trained surgical care for oral, throat, laryngeal & thyroid cancers." },
+  { icon: Microscope, title: "Head-Neck Surgery and Cancer Care", desc: "ENT-led head-neck surgery and cancer care for oral, throat, laryngeal and thyroid conditions — part of our ENT practice, not a separate oncology specialty." },
 ];
 
 function HomePage() {
@@ -76,7 +76,7 @@ function HomePage() {
               {[
                 { k: "18+", v: "Years Exp." },
                 { k: "MS ENT", v: "Specialist" },
-                { k: "Face & Cancer", v: "Surgery" },
+                { k: "ENT · Face · Cancer", v: "Surgery" },
               ].map((s) => (
                 <div key={s.v} className="rounded-xl bg-white/70 ring-1 ring-border p-3 text-center">
                   <div className="font-display text-2xl font-bold text-primary">{s.k}</div>
@@ -100,7 +100,7 @@ function HomePage() {
                       <div className="text-xs uppercase tracking-wider opacity-80">Consult with</div>
                       <div className="font-display text-2xl font-bold leading-tight">{CLINIC.doctor.name}</div>
                       <div className="text-sm opacity-90">{CLINIC.doctor.creds}</div>
-                      <div className="text-sm font-semibold text-crimson-foreground/90">Face Surgeon · Cancer Surgeon</div>
+                      <div className="text-sm font-semibold text-crimson-foreground/90">ENT Surgeon · Face Surgeon · Cancer Surgeon</div>
                     </div>
                   </div>
                 </div>
@@ -108,10 +108,6 @@ function HomePage() {
                   <div className="flex items-center gap-2 text-sm">
                     <Award className="h-4 w-4 text-crimson" />
                     <span>Ex-BJ Medical College, Pune</span>
-                  </div>
-                  <div className="flex items-center gap-2 text-sm">
-                    <ShieldCheck className="h-4 w-4 text-crimson" />
-                    <span>15+ years of experience as a Teaching Professor</span>
                   </div>
                   <div className="flex items-start gap-2 text-sm">
                     <MapPin className="h-4 w-4 text-crimson mt-0.5" />
@@ -125,7 +121,7 @@ function HomePage() {
                   </div>
                   <Link to="/book"
                     className="mt-2 inline-flex w-full items-center justify-center gap-2 rounded-xl bg-crimson py-3 text-sm font-semibold text-crimson-foreground">
-                    Reserve a Slot <ArrowRight className="h-4 w-4" />
+                    Book Consultation <ArrowRight className="h-4 w-4" />
                   </Link>
                 </div>
               </div>

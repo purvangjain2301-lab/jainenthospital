@@ -132,6 +132,9 @@ function FeedbackPage() {
                   className="mt-1.5 w-full border border-border rounded-xl px-4 py-2.5 text-sm outline-none focus:ring-2 focus:ring-primary/30"
                   placeholder="+91"
                 />
+                <p className="mt-1.5 text-[11px] text-muted-foreground">
+                  Your phone number will not be displayed publicly with your review. It is only used by the clinic to follow up if needed.
+                </p>
               </div>
               <div>
                 <label className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">
