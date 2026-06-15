@@ -8,7 +8,7 @@ export const CLINIC = {
     title: "ENT & Head Neck Surgeon with Cancer Care",
     experience: "18+ years of experience",
     teaching: "15+ years of experience as a Teaching Professor",
-    bio: "Senior ENT Specialist with 18+ years of experience in clinical and surgical practice, including 15+ years of experience as a Teaching Professor. Ex-BJ Medical College, Pune. Specializes in advanced ear, nose, throat, face surgery (cosmetic & reconstructive),head-neck and cancer care. Welcomes patients from across India and worldwide via telemedicine.",
+    bio: "Senior ENT Surgeon with 18+ years of experience in clinical and surgical practice. Ex-BJ Medical College, Pune. Dr. Jain is a practising ENT Surgeon who also specializes in face surgery (cosmetic & reconstructive) and head-neck cancer care, and provides in-clinic and telemedicine consultations for patients across India and worldwide.",
   },
   address: {
     line1: "First Floor, Iskcon Pride",
