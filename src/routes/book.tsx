@@ -27,8 +27,11 @@ const RAZORPAY_PAYMENT_LINK = "https://rzp.io/rzp/3hpqLFJU";
 const MAX_CAPACITY = 12;
 const LANGUAGES = ["Hindi", "English", "Gujarati", "Marathi"] as const;
 
-type Step = "form" | "payment" | "done";
+type Step = "form" | "payment" | "confirm" | "done";
 type SlotInfo = { time_label: string; max_capacity: number; is_blocked: boolean; booked: number };
+type PayMethod = "online" | "cash";
+
+const CONSULT_FEE = 518;
 
 const emptyForm = () => ({
   name: "", age: "", phone: "", email: "", date: "", slot: "", concern: "",
@@ -44,6 +47,10 @@ function Book() {
   const [error, setError] = useState("");
   const [slotInfo, setSlotInfo] = useState<SlotInfo[]>([]);
   const [loadingSlots, setLoadingSlots] = useState(false);
+  const [payMethod, setPayMethod] = useState<PayMethod | "">("");
+  const [txnId, setTxnId] = useState("");
+  const [cashDate, setCashDate] = useState("");
+  const [cashAmount, setCashAmount] = useState("");
 
   const isTelemed = form.mode === "Telemedicine (Video)";
   const valid = form.name && form.phone && form.date && form.slot && form.concern;
@@ -142,10 +149,31 @@ function Book() {
     window.open(RAZORPAY_PAYMENT_LINK, "_blank", "noopener,noreferrer");
   }
 
-  async function iHavePaid() {
+  function iHavePaid() {
+    setError("");
+    setPayMethod("");
+    setTxnId("");
+    setCashDate("");
+    setCashAmount("");
+    setStep("confirm");
+  }
+
+  async function submitPaymentConfirmation() {
+    setError("");
+    if (!payMethod) { setError("Please select how you paid."); return; }
+    if (payMethod === "online" && txnId.trim().length < 4) {
+      setError("Please enter a valid transaction / UPI reference ID."); return;
+    }
+    if (payMethod === "cash") {
+      if (!cashDate) { setError("Please enter the payment date."); return; }
+      if (!cashAmount || Number(cashAmount) <= 0) { setError("Please enter the amount paid."); return; }
+    }
     if (apptId) {
       await supabase.rpc("mark_payment_pending_verification", { _id: apptId });
     }
+    const paymentLine = payMethod === "online"
+      ? `Payment: ₹${CONSULT_FEE} - Online · Txn ID: ${txnId.trim()} (pending verification)`
+      : `Payment: ₹${cashAmount} - Cash · Paid on ${cashDate} (pending verification)`;
     const msg = [
       `*Appointment request — Jain ENT Hospital*`,
       `Name: ${form.name}`,
@@ -155,7 +183,7 @@ function Book() {
       `Date: ${form.date}  Slot: ${form.slot}`,
       token ? `Token Number: ${token}` : "",
       `Concern: ${form.concern}`,
-      `Payment: ₹500 - Payment confirmation pending. Please verify before appointment.${apptId ? `  (Ref: ${apptId.slice(0,8)})` : ""}`,
+      `${paymentLine}${apptId ? `  (Ref: ${apptId.slice(0,8)})` : ""}`,
     ].filter(Boolean).join("\n");
     window.open(waLink(msg), "_blank", "noopener,noreferrer");
     setStep("done");
@@ -166,7 +194,7 @@ function Book() {
       <PageHero
         eyebrow="Appointments"
         title="Book your ENT or face-surgery consultation."
-        subtitle="Tell us when you'd like to visit. The ₹500 consultation fee appears only at the secure payment step — never before."
+        subtitle="Tell us when you'd like to visit. The ₹518 consultation fee appears only at the secure payment step — never before."
       />
 
       <section className="py-14">
@@ -304,7 +332,7 @@ function Book() {
                   {token !== null && <Row k="Token #"  v={String(token)} />}
                   <div className="border-t border-border pt-2 mt-2 flex justify-between font-bold text-primary">
                     <span>Consultation fee</span>
-                    <span className="text-crimson text-lg">₹500</span>
+                    <span className="text-crimson text-lg">₹{CONSULT_FEE}</span>
                   </div>
                 </div>
 
@@ -318,7 +346,7 @@ function Book() {
                 <div className="mt-6 flex flex-wrap gap-3">
                   <button onClick={payNow}
                     className="inline-flex items-center gap-2 rounded-full bg-crimson text-crimson-foreground px-7 py-3.5 text-sm font-semibold">
-                    <CreditCard className="h-4 w-4" /> Pay ₹500 <ExternalLink className="h-3.5 w-3.5 opacity-80" />
+                    <CreditCard className="h-4 w-4" /> Pay ₹{CONSULT_FEE} <ExternalLink className="h-3.5 w-3.5 opacity-80" />
                   </button>
                   <button onClick={iHavePaid}
                     className="inline-flex items-center gap-2 rounded-full bg-emerald-600 text-white px-5 py-3.5 text-sm font-semibold">
@@ -332,6 +360,76 @@ function Book() {
                 <p className="mt-3 text-xs text-muted-foreground">
                   After completing payment in the Razorpay window, tap <b>"I've paid"</b> so the clinic receives your confirmation on WhatsApp instantly.
                 </p>
+              </div>
+            )}
+
+            {step === "confirm" && (
+              <div className="rounded-2xl bg-white ring-1 ring-border p-8 shadow-soft">
+                <h2 className="font-display text-2xl font-bold text-primary">Confirm your payment</h2>
+                <p className="text-muted-foreground mt-2 text-sm">
+                  Please tell us how you paid so our team can verify and confirm your slot.
+                </p>
+
+                <div className="mt-5">
+                  <span className="text-sm font-medium text-foreground">Payment method <span className="text-crimson">*</span></span>
+                  <div className="mt-2 grid grid-cols-2 gap-2 max-w-md">
+                    {([
+                      { v: "online", label: "Online (UPI / Card / Razorpay)" },
+                      { v: "cash", label: "Cash / Offline" },
+                    ] as { v: PayMethod; label: string }[]).map(opt => {
+                      const selected = payMethod === opt.v;
+                      return (
+                        <button key={opt.v} type="button" onClick={() => setPayMethod(opt.v)}
+                          className={`rounded-xl border px-3 py-3 text-left text-sm font-semibold transition ${
+                            selected ? "border-crimson bg-crimson/5 ring-1 ring-crimson text-primary"
+                            : "border-border bg-white hover:border-primary text-foreground"
+                          }`}>
+                          {opt.label}
+                        </button>
+                      );
+                    })}
+                  </div>
+                </div>
+
+                {payMethod === "online" && (
+                  <div className="mt-5 max-w-md">
+                    <Field label="Transaction / UPI reference ID" required>
+                      <input value={txnId} onChange={e => setTxnId(e.target.value)}
+                        className="input" placeholder="e.g. 4296531238XXX or UPI ref" />
+                    </Field>
+                    <p className="mt-1 text-xs text-muted-foreground">
+                      You can find this in your UPI app, bank SMS or Razorpay receipt.
+                    </p>
+                  </div>
+                )}
+
+                {payMethod === "cash" && (
+                  <div className="mt-5 grid sm:grid-cols-2 gap-4 max-w-md">
+                    <Field label="Date of payment" required>
+                      <input type="date" value={cashDate}
+                        max={new Date().toISOString().slice(0, 10)}
+                        onChange={e => setCashDate(e.target.value)} className="input" />
+                    </Field>
+                    <Field label="Amount paid (₹)" required>
+                      <input value={cashAmount} inputMode="numeric"
+                        onChange={e => setCashAmount(e.target.value.replace(/[^\d]/g, ""))}
+                        className="input" placeholder="e.g. 518" />
+                    </Field>
+                  </div>
+                )}
+
+                {error && <p className="mt-4 text-xs text-red-500">{error}</p>}
+
+                <div className="mt-6 flex flex-wrap gap-3">
+                  <button onClick={submitPaymentConfirmation}
+                    className="inline-flex items-center gap-2 rounded-full bg-crimson text-crimson-foreground px-7 py-3.5 text-sm font-semibold">
+                    <CheckCircle2 className="h-4 w-4" /> Send confirmation on WhatsApp
+                  </button>
+                  <button onClick={() => setStep("payment")}
+                    className="inline-flex items-center gap-2 rounded-full ring-1 ring-border px-5 py-3.5 text-sm font-semibold">
+                    <ArrowLeft className="h-4 w-4" /> Back
+                  </button>
+                </div>
               </div>
             )}
 
@@ -350,7 +448,7 @@ function Book() {
                   </p>
                 )}
                 <p className="text-muted-foreground mt-2 text-sm">
-                  Payment received · ₹500. We've sent a WhatsApp confirmation. Our team will reach you
+                  Payment received · ₹{CONSULT_FEE}. We've sent a WhatsApp confirmation. Our team will reach you
                   within clinic hours ({CLINIC.hours.weekdays}).
                 </p>
                 <p className="mt-3 text-sm text-primary bg-primary/5 ring-1 ring-primary/15 rounded-xl p-3">
