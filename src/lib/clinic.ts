@@ -1,3 +1,5 @@
+
+
 export const CLINIC = {
   name: "Jain ENT Hospital",
   tagline: "Ear • Nose • Throat • Face Surgery • Head & Neck Cancer Care",
@@ -7,7 +9,6 @@ export const CLINIC = {
     creds: "MBBS, MS (ENT)",
     title: "ENT & Head Neck Surgeon with Cancer Care",
     experience: "18+ years of experience",
-    teaching: "15+ years of experience as a Teaching Professor",
     bio: "Senior ENT Surgeon with 18+ years of experience in clinical and surgical practice. Ex-BJ Medical College, Pune. Dr. Jain is a practising ENT Surgeon who also specializes in face surgery (cosmetic & reconstructive) and head-neck cancer care, and provides in-clinic and telemedicine consultations for patients across India and worldwide.",
   },
   address: {
@@ -36,7 +37,7 @@ export const CLINIC = {
   },
   social: {
     facebook: "https://share.google/nnGSfq03wLnaikGhn",
-    instagram: "https://www.instagram.com/dr_devendra_jain/",
+    instagram: "https://www.instagram.com/dr_devendra_jain?igsh=aHg0NHE5dm53cTV5",
     maps: "https://maps.app.goo.gl/UGd5DbgeySUoC2wp6?g_st=ac",
   },
 } as const;
