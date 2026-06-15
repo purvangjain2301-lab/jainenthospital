@@ -479,14 +479,14 @@ function Book() {
               <ol className="mt-4 space-y-3 text-sm opacity-95">
                 <li className="flex gap-3"><Step n={1} /> Fill in your details and pick an available slot.</li>
                 <li className="flex gap-3"><Step n={2} /> Get an instant token number.</li>
-                <li className="flex gap-3"><Step n={3} /> Pay ₹500 securely via Razorpay — slot locked instantly.</li>
+                <li className="flex gap-3"><Step n={3} /> Pay ₹{CONSULT_FEE} securely via Razorpay — slot locked instantly.</li>
                 <li className="flex gap-3"><Step n={4} /> Visit clinic or connect via video on the day.</li>
               </ol>
             </div>
             <div className="rounded-2xl ring-1 ring-border bg-white p-6 space-y-3 text-sm">
               <div className="flex items-center gap-3"><Calendar className="h-4 w-4 text-crimson" /> {CLINIC.hours.weekdays}</div>
               <div className="flex items-center gap-3"><Clock    className="h-4 w-4 text-crimson" /> {CLINIC.hours.sunday}</div>
-              <div className="flex items-center gap-3"><IndianRupee className="h-4 w-4 text-crimson" /> ₹500 — shown only at payment step</div>
+              <div className="flex items-center gap-3"><IndianRupee className="h-4 w-4 text-crimson" /> ₹{CONSULT_FEE} — shown only at payment step</div>
               <div className="flex items-center gap-3"><Ticket className="h-4 w-4 text-crimson" /> Token issued instantly on booking</div>
             </div>
             <a href={`tel:${telPrimary}`}
