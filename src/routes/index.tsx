@@ -1,7 +1,7 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { motion } from "motion/react";
 import {
-  Stethoscope, Ear, ShieldCheck, Award, Sparkles, ArrowRight,
+  Stethoscope, Ear, Award, Sparkles, ArrowRight,
   Calendar, MapPin, Phone, Star, HeartPulse, Microscope,
 } from "lucide-react";
 import { SiteLayout } from "@/components/site/SiteLayout";
