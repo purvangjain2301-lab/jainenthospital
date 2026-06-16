@@ -319,8 +319,14 @@ function PatientDashboard(props: {
                             </span>
                           )}
                           <span className={`rounded-full px-2.5 py-0.5 text-xs font-semibold ${STATUS_COLOR[a.status] ?? "bg-slate-100 text-slate-600"}`}>{a.status}</span>
-                          <span className={`rounded-full px-2.5 py-0.5 text-xs font-semibold ${a.payment_status === "paid" ? "bg-emerald-100 text-emerald-700" : "bg-slate-100 text-slate-600"}`}>
-                            {a.payment_status}
+                          <span className={`rounded-full px-2.5 py-0.5 text-xs font-semibold ${
+                            a.payment_status === "paid" || a.payment_status === "verified"
+                              ? "bg-emerald-100 text-emerald-700"
+                              : a.payment_status === "pending_verification"
+                              ? "bg-amber-100 text-amber-700"
+                              : "bg-slate-100 text-slate-600"
+                          }`}>
+                            {a.payment_status === "pending_verification" ? "pending verification" : a.payment_status}
                           </span>
                         </div>
                         <div className="mt-2 font-semibold text-primary">{a.date} at {a.slot}</div>

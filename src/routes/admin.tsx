@@ -538,13 +538,23 @@ const STATUS_COLOR: Record<string, string> = {
   cancelled: "bg-red-100 text-red-600",
 };
 const PAY_COLOR: Record<string, string> = {
-  unpaid: "bg-slate-100 text-slate-600",
-  paid:   "bg-emerald-100 text-emerald-700",
+  unpaid:                "bg-slate-100 text-slate-600",
+  pending_verification:  "bg-amber-100 text-amber-700",
+  paid:                  "bg-emerald-100 text-emerald-700",
+  verified:              "bg-emerald-100 text-emerald-700",
+  rejected:              "bg-red-100 text-red-600",
+};
+const PAY_LABEL: Record<string, string> = {
+  unpaid: "unpaid",
+  pending_verification: "pending verification",
+  paid: "paid",
+  verified: "verified",
+  rejected: "rejected",
 };
 
 function AppointmentsTab() {
   const [appts, setAppts] = useState<Appointment[]>([]);
-  const [filter, setFilter] = useState<"all"|"pending"|"confirmed"|"cancelled">("all");
+  const [filter, setFilter] = useState<"all"|"pending"|"confirmed"|"cancelled"|"pending_payment">("all");
 
   async function load() {
     const { data } = await supabase.from("appointments").select("*").order("created_at", { ascending: false });
@@ -556,21 +566,39 @@ function AppointmentsTab() {
     await supabase.from("appointments").update({ status }).eq("id", id);
     load();
   }
-  async function markPaid(id: string) {
-    await supabase.from("appointments").update({ payment_status: "paid" }).eq("id", id);
+  async function setPayment(id: string, payment_status: string) {
+    await supabase.from("appointments").update({ payment_status }).eq("id", id);
     load();
   }
 
-  const visible = filter === "all" ? appts : appts.filter(a => a.status === filter);
+  const pendingPayCount = appts.filter(a => a.payment_status === "pending_verification").length;
+  const visible =
+    filter === "all" ? appts
+    : filter === "pending_payment" ? appts.filter(a => a.payment_status === "pending_verification")
+    : appts.filter(a => a.status === filter);
 
   return (
     <div>
       <Heading>Appointments</Heading>
+      {pendingPayCount > 0 && (
+        <div className="mt-4 rounded-2xl bg-amber-50 ring-1 ring-amber-200 p-4 flex items-center justify-between gap-3 flex-wrap">
+          <div className="text-sm text-amber-800">
+            <b>{pendingPayCount}</b> payment{pendingPayCount > 1 ? "s" : ""} awaiting your verification.
+          </div>
+          <button onClick={() => setFilter("pending_payment")}
+            className="rounded-full bg-amber-600 text-white px-4 py-1.5 text-xs font-semibold">
+            Review pending payments
+          </button>
+        </div>
+      )}
       <div className="flex gap-2 flex-wrap mt-4 mb-6">
-        {(["all","pending","confirmed","cancelled"] as const).map(f => (
+        {(["all","pending","confirmed","cancelled","pending_payment"] as const).map(f => (
           <button key={f} onClick={() => setFilter(f)}
             className={`rounded-full px-4 py-1.5 text-xs font-semibold capitalize transition ${filter === f ? "bg-primary text-primary-foreground" : "ring-1 ring-border text-muted-foreground hover:bg-white"}`}>
-            {f} {f === "all" ? `(${appts.length})` : `(${appts.filter(a => a.status === f).length})`}
+            {f === "pending_payment" ? "Pending payment" : f}
+            {" "}({f === "all" ? appts.length
+              : f === "pending_payment" ? pendingPayCount
+              : appts.filter(a => a.status === f).length})
           </button>
         ))}
       </div>
@@ -590,7 +618,9 @@ function AppointmentsTab() {
                   </div>
                   <div className="flex flex-col items-end gap-2">
                     <span className={`rounded-full px-2.5 py-0.5 text-xs font-semibold ${STATUS_COLOR[a.status]}`}>{a.status}</span>
-                    <span className={`rounded-full px-2.5 py-0.5 text-xs font-semibold ${PAY_COLOR[a.payment_status]}`}>{a.payment_status}</span>
+                    <span className={`rounded-full px-2.5 py-0.5 text-xs font-semibold ${PAY_COLOR[a.payment_status] ?? "bg-slate-100 text-slate-600"}`}>
+                      {PAY_LABEL[a.payment_status] ?? a.payment_status}
+                    </span>
                   </div>
                 </div>
                 <div className="mt-3 flex gap-2 flex-wrap">
@@ -606,8 +636,14 @@ function AppointmentsTab() {
                   {a.status === "cancelled" && (
                     <ActionBtn color="emerald" onClick={() => updateStatus(a.id,"pending")} icon={CheckCircle2}>Reopen</ActionBtn>
                   )}
-                  {a.payment_status !== "paid" && (
-                    <ActionBtn color="emerald" onClick={() => markPaid(a.id)} icon={CheckCircle2}>Mark paid</ActionBtn>
+                  {a.payment_status === "pending_verification" && (
+                    <>
+                      <ActionBtn color="emerald" onClick={() => setPayment(a.id, "verified")} icon={CheckCircle2}>Approve payment</ActionBtn>
+                      <ActionBtn color="red" onClick={() => setPayment(a.id, "rejected")} icon={XCircle}>Reject payment</ActionBtn>
+                    </>
+                  )}
+                  {(a.payment_status === "unpaid" || a.payment_status === "rejected") && (
+                    <ActionBtn color="emerald" onClick={() => setPayment(a.id, "verified")} icon={CheckCircle2}>Mark verified</ActionBtn>
                   )}
                 </div>
               </div>
