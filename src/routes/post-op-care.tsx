@@ -91,208 +91,293 @@ function generatePremiumPDF() {
   const W = doc.internal.pageSize.getWidth();
   const H = doc.internal.pageSize.getHeight();
   const CRIMSON: [number, number, number] = [194, 24, 49];
-  const DARK: [number, number, number] = [30, 30, 35];
-  const MUTED: [number, number, number] = [110, 110, 120];
+  const CRIMSON_DARK: [number, number, number] = [140, 16, 34];
+  const DARK: [number, number, number] = [22, 24, 35];
+  const MUTED: [number, number, number] = [120, 122, 135];
   const LIGHT_RED: [number, number, number] = [253, 235, 238];
-  const BORDER: [number, number, number] = [225, 225, 230];
-  const M = 40; // page margin
+  const CREAM: [number, number, number] = [252, 248, 244];
+  const BORDER: [number, number, number] = [228, 228, 235];
+  const GOLD: [number, number, number] = [184, 134, 11];
+  const M = 44;
   let y = 0;
 
+  const setFill = (c: [number, number, number]) => doc.setFillColor(c[0], c[1], c[2]);
+  const setText = (c: [number, number, number]) => doc.setTextColor(c[0], c[1], c[2]);
+  const setDraw = (c: [number, number, number]) => doc.setDrawColor(c[0], c[1], c[2]);
+
+  // ─── Cover page ──────────────────────────────────────────────────────────
+  const drawCover = () => {
+    // Full-bleed crimson background
+    setFill(CRIMSON);
+    doc.rect(0, 0, W, H, "F");
+    // Darker bottom band
+    setFill(CRIMSON_DARK);
+    doc.rect(0, H - 200, W, 200, "F");
+    // Decorative gold rule
+    setFill(GOLD);
+    doc.rect(M, 220, 60, 3, "F");
+
+    // Top brand row
+    setFill([255, 255, 255]);
+    doc.circle(M + 18, 60, 18, "F");
+    setText(CRIMSON);
+    doc.setFont("helvetica", "bold");
+    doc.setFontSize(15);
+    doc.text("J", M + 18, 65, { align: "center" });
+
+    setText([255, 255, 255]);
+    doc.setFont("helvetica", "bold");
+    doc.setFontSize(13);
+    doc.text("JAIN ENT HOSPITAL", M + 46, 56);
+    doc.setFont("helvetica", "normal");
+    doc.setFontSize(9);
+    doc.text("Deesa · Banaskantha · Gujarat", M + 46, 70);
+
+    // Title block
+    setText([255, 255, 255]);
+    doc.setFont("helvetica", "normal");
+    doc.setFontSize(11);
+    doc.text("PATIENT CARE GUIDE", M, 200);
+
+    doc.setFont("helvetica", "bold");
+    doc.setFontSize(38);
+    doc.text("Post-Operative", M, 260);
+    doc.text("Care Checklist", M, 300);
+
+    doc.setFont("helvetica", "normal");
+    doc.setFontSize(11);
+    const intro = doc.splitTextToSize(
+      "A practical recovery companion for ENT and Head & Neck surgery patients — covering medications, diet, rest, wound care, warning signs and follow-up.",
+      W - M * 2
+    );
+    doc.text(intro, M, 340);
+
+    // Doctor card
+    setFill([255, 255, 255]);
+    doc.roundedRect(M, H - 170, W - M * 2, 110, 10, 10, "F");
+    setDraw(GOLD);
+    doc.setLineWidth(1.2);
+    doc.line(M + 16, H - 140, M + 56, H - 140);
+
+    setText(CRIMSON);
+    doc.setFont("helvetica", "bold");
+    doc.setFontSize(9);
+    doc.text("UNDER THE CARE OF", M + 16, H - 150);
+
+    setText(DARK);
+    doc.setFontSize(18);
+    doc.text("Prof. Dr. Devendra M. Jain", M + 16, H - 120);
+    doc.setFont("helvetica", "normal");
+    doc.setFontSize(10);
+    setText(MUTED);
+    doc.text("MBBS, MS (ENT) · Senior ENT Surgeon · Face & Head-Neck Cancer Care", M + 16, H - 104);
+    doc.text("+91 93257 69599  ·  jainentdrdevendra@gmail.com", M + 16, H - 88);
+    doc.text("Iskcon Pride, Deesa Highway, Deesa – 385535", M + 16, H - 72);
+
+    // Footer line on cover
+    setText([255, 255, 255]);
+    doc.setFontSize(8);
+    doc.text("Issued by Jain ENT Hospital  ·  jainent.lovable.app", M, H - 32);
+    doc.text(`Generated ${new Date().toLocaleDateString("en-IN", { day: "2-digit", month: "long", year: "numeric" })}`, W - M, H - 32, { align: "right" });
+  };
+
+  // ─── Watermark for content pages ──────────────────────────────────────────
   const drawWatermark = () => {
     doc.saveGraphicsState();
-    // @ts-ignore - GState is available at runtime
-    doc.setGState(new (doc as any).GState({ opacity: 0.05 }));
-    doc.setTextColor(...CRIMSON);
+    // @ts-ignore
+    doc.setGState(new (doc as any).GState({ opacity: 0.04 }));
+    setText(CRIMSON);
     doc.setFont("helvetica", "bold");
-    doc.setFontSize(90);
+    doc.setFontSize(88);
     doc.text("JAIN ENT", W / 2, H / 2 + 30, { align: "center", angle: 30 });
     doc.restoreGraphicsState();
   };
 
+  // ─── Slim header on content pages ─────────────────────────────────────────
   const drawHeader = () => {
-    // Crimson header bar
-    doc.setFillColor(...CRIMSON);
-    doc.rect(0, 0, W, 90, "F");
-    // Accent strip
-    doc.setFillColor(160, 18, 40);
-    doc.rect(0, 90, W, 4, "F");
+    setFill(CRIMSON);
+    doc.rect(0, 0, W, 56, "F");
+    setFill(GOLD);
+    doc.rect(0, 56, W, 2, "F");
 
-    // Logo monogram circle
-    doc.setFillColor(255, 255, 255);
-    doc.circle(M + 22, 45, 22, "F");
-    doc.setTextColor(...CRIMSON);
+    setFill([255, 255, 255]);
+    doc.circle(M + 14, 28, 14, "F");
+    setText(CRIMSON);
     doc.setFont("helvetica", "bold");
-    doc.setFontSize(16);
-    doc.text("J", M + 22, 51, { align: "center" });
+    doc.setFontSize(12);
+    doc.text("J", M + 14, 32, { align: "center" });
 
-    // Hospital name + doctor
-    doc.setTextColor(255, 255, 255);
+    setText([255, 255, 255]);
     doc.setFont("helvetica", "bold");
-    doc.setFontSize(18);
-    doc.text("JAIN ENT HOSPITAL", M + 58, 38);
+    doc.setFontSize(12);
+    doc.text("JAIN ENT HOSPITAL", M + 36, 26);
     doc.setFont("helvetica", "normal");
-    doc.setFontSize(9.5);
-    doc.text("Prof. Dr. Devendra M. Jain, MBBS, MS (ENT)", M + 58, 53);
     doc.setFontSize(8.5);
-    doc.text("Ear • Nose • Throat • Head & Neck Cancer Care", M + 58, 66);
+    doc.text("Post-Operative Care Checklist", M + 36, 40);
 
-    // Right-side contact
     doc.setFontSize(8.5);
-    doc.text("+91 93257 69599  •  24×7", W - M, 38, { align: "right" });
-    doc.text("jainentdrdevendra@gmail.com", W - M, 51, { align: "right" });
-    doc.text("Iskcon Pride, Deesa Highway, Deesa – 385535", W - M, 64, { align: "right" });
+    doc.text("+91 93257 69599  ·  24×7", W - M, 26, { align: "right" });
+    doc.text("Deesa, Gujarat", W - M, 40, { align: "right" });
   };
 
   const drawFooter = (pageNum: number, totalPages: number) => {
-    doc.setDrawColor(...BORDER);
+    setDraw(BORDER);
     doc.setLineWidth(0.5);
-    doc.line(M, H - 50, W - M, H - 50);
+    doc.line(M, H - 46, W - M, H - 46);
     doc.setFont("helvetica", "italic");
     doc.setFontSize(8);
-    doc.setTextColor(...MUTED);
+    setText(MUTED);
     doc.text(
       "This checklist is a general guide. Always follow the specific instructions given to you at discharge.",
-      W / 2, H - 34, { align: "center" }
+      W / 2, H - 32, { align: "center" }
     );
     doc.setFont("helvetica", "normal");
     doc.setFontSize(8);
-    doc.text(`Jain ENT Hospital  •  Deesa, Gujarat`, M, H - 18);
-    doc.text(`Page ${pageNum} of ${totalPages}`, W - M, H - 18, { align: "right" });
+    doc.text("Jain ENT Hospital  ·  Prof. Dr. Devendra M. Jain", M, H - 16);
+    doc.text(`Page ${pageNum} of ${totalPages}`, W - M, H - 16, { align: "right" });
   };
 
   const ensureSpace = (needed: number) => {
-    if (y + needed > H - 70) {
+    if (y + needed > H - 60) {
       doc.addPage();
       drawWatermark();
       drawHeader();
-      y = 120;
+      y = 86;
     }
   };
 
-  // ---- Page 1 ----
+  // ── Render cover ──
+  drawCover();
+
+  // ── Page 2 onwards: content ──
+  doc.addPage();
   drawWatermark();
   drawHeader();
-  y = 120;
+  y = 86;
 
-  // Title block
-  doc.setTextColor(...DARK);
+  // TOC / Intro card
+  setFill(CREAM);
+  doc.roundedRect(M, y, W - M * 2, 76, 8, 8, "F");
+  setDraw(GOLD);
+  doc.setLineWidth(1.5);
+  doc.line(M + 14, y + 22, M + 44, y + 22);
+  setText(CRIMSON);
   doc.setFont("helvetica", "bold");
-  doc.setFontSize(22);
-  doc.text("Post-Operative Care Checklist", M, y);
-  y += 8;
-  doc.setDrawColor(...CRIMSON);
-  doc.setLineWidth(2);
-  doc.line(M, y, M + 60, y);
-  y += 18;
+  doc.setFontSize(9);
+  doc.text("IN THIS GUIDE", M + 14, y + 18);
+  setText(DARK);
+  doc.setFont("helvetica", "bold");
+  doc.setFontSize(14);
+  doc.text("Five recovery pillars + emergency warning signs", M + 14, y + 40);
   doc.setFont("helvetica", "normal");
-  doc.setFontSize(10);
-  doc.setTextColor(...MUTED);
+  doc.setFontSize(9.5);
+  setText(MUTED);
   doc.text(
-    "Personalised recovery guidance for ENT and Head & Neck surgery patients under the care of",
-    M, y
+    "Tick off items each day. Reach us on WhatsApp or call 24×7 for any concern.",
+    M + 14, y + 58
   );
-  y += 13;
-  doc.setTextColor(...DARK);
-  doc.setFont("helvetica", "bold");
-  doc.text("Prof. Dr. Devendra M. Jain", M, y);
-  y += 22;
+  y += 96;
 
   // Sections
   SECTIONS.forEach((s, i) => {
-    ensureSpace(60);
+    ensureSpace(70);
 
-    // Section header bar
-    doc.setFillColor(...LIGHT_RED);
-    doc.roundedRect(M, y, W - M * 2, 26, 4, 4, "F");
-    doc.setFillColor(...CRIMSON);
-    doc.roundedRect(M, y, 4, 26, 2, 2, "F");
+    // Section header band
+    setFill(LIGHT_RED);
+    doc.roundedRect(M, y, W - M * 2, 30, 6, 6, "F");
+    setFill(CRIMSON);
+    doc.roundedRect(M, y, 4, 30, 2, 2, "F");
 
-    // Number badge
-    doc.setFillColor(...CRIMSON);
-    doc.circle(M + 24, y + 13, 9, "F");
-    doc.setTextColor(255, 255, 255);
+    setFill(CRIMSON);
+    doc.circle(M + 26, y + 15, 11, "F");
+    setText([255, 255, 255]);
     doc.setFont("helvetica", "bold");
-    doc.setFontSize(10);
-    doc.text(String(i + 1), M + 24, y + 16.5, { align: "center" });
+    doc.setFontSize(11);
+    doc.text(String(i + 1).padStart(2, "0"), M + 26, y + 19, { align: "center" });
 
-    doc.setTextColor(...DARK);
+    setText(DARK);
     doc.setFont("helvetica", "bold");
-    doc.setFontSize(12);
-    doc.text(s.title.toUpperCase(), M + 42, y + 17);
-    y += 36;
+    doc.setFontSize(12.5);
+    doc.text(s.title.toUpperCase(), M + 46, y + 19);
 
-    // Items
+    // Decorative gold dot
+    setFill(GOLD);
+    doc.circle(W - M - 14, y + 15, 2.5, "F");
+
+    y += 42;
+
     doc.setFont("helvetica", "normal");
     doc.setFontSize(10);
-    doc.setTextColor(45, 45, 55);
+    setText([45, 45, 55]);
     s.items.forEach((it) => {
-      const wrapped = doc.splitTextToSize(it, W - M * 2 - 30);
-      const blockH = wrapped.length * 13 + 4;
+      const wrapped = doc.splitTextToSize(it, W - M * 2 - 32);
+      const blockH = wrapped.length * 13 + 6;
       ensureSpace(blockH);
       // Checkbox
-      doc.setDrawColor(...CRIMSON);
-      doc.setLineWidth(0.8);
-      doc.roundedRect(M + 6, y - 8, 10, 10, 1.5, 1.5);
-      doc.text(wrapped, M + 24, y);
+      setDraw(CRIMSON);
+      doc.setLineWidth(0.9);
+      doc.roundedRect(M + 6, y - 9, 11, 11, 2, 2);
+      setText([45, 45, 55]);
+      doc.text(wrapped, M + 26, y);
       y += blockH;
     });
-    y += 8;
+    y += 10;
   });
 
-  // Warning section
-  ensureSpace(140);
-  doc.setFillColor(...LIGHT_RED);
-  doc.roundedRect(M, y, W - M * 2, 30, 4, 4, "F");
-  doc.setFillColor(...CRIMSON);
-  doc.roundedRect(M, y, W - M * 2, 30, 4, 4, "S");
-  doc.setTextColor(...CRIMSON);
+  // ── Warning section ──
+  ensureSpace(150);
+  setFill(CRIMSON);
+  doc.roundedRect(M, y, W - M * 2, 34, 6, 6, "F");
+  setText([255, 255, 255]);
   doc.setFont("helvetica", "bold");
   doc.setFontSize(13);
-  doc.text("WARNING SIGNS — CONTACT US IMMEDIATELY", M + 14, y + 19);
-  y += 42;
+  doc.text("⚠  WARNING SIGNS — CONTACT US IMMEDIATELY", M + 16, y + 22);
+  y += 46;
 
   doc.setFont("helvetica", "normal");
   doc.setFontSize(10);
-  doc.setTextColor(130, 20, 30);
+  setText([130, 20, 30]);
   RED_FLAGS.forEach((it) => {
-    const wrapped = doc.splitTextToSize(it, W - M * 2 - 24);
+    const wrapped = doc.splitTextToSize(it, W - M * 2 - 28);
     const blockH = wrapped.length * 13 + 4;
     ensureSpace(blockH);
-    // Alert triangle marker
-    doc.setFillColor(...CRIMSON);
-    doc.triangle(M + 6, y, M + 14, y - 10, M + 22, y, "F");
-    doc.setTextColor(255, 255, 255);
+    setFill(CRIMSON);
+    doc.triangle(M + 6, y, M + 14, y - 11, M + 22, y, "F");
+    setText([255, 255, 255]);
     doc.setFont("helvetica", "bold");
     doc.setFontSize(9);
-    doc.text("!", M + 14, y - 2, { align: "center" });
-    doc.setTextColor(130, 20, 30);
+    doc.text("!", M + 14, y - 3, { align: "center" });
+    setText([130, 20, 30]);
     doc.setFont("helvetica", "normal");
     doc.setFontSize(10);
-    doc.text(wrapped, M + 28, y);
+    doc.text(wrapped, M + 30, y);
     y += blockH;
   });
-  y += 10;
+  y += 12;
 
-  // Emergency banner
-  ensureSpace(70);
-  doc.setFillColor(...CRIMSON);
-  doc.roundedRect(M, y, W - M * 2, 56, 6, 6, "F");
-  doc.setTextColor(255, 255, 255);
+  // ── Emergency banner ──
+  ensureSpace(82);
+  setFill(CRIMSON);
+  doc.roundedRect(M, y, W - M * 2, 66, 8, 8, "F");
+  setFill(GOLD);
+  doc.roundedRect(M, y, 4, 66, 2, 2, "F");
+  setText([255, 255, 255]);
   doc.setFont("helvetica", "bold");
-  doc.setFontSize(11);
+  doc.setFontSize(10);
   doc.text("EMERGENCY — AVAILABLE 24×7", M + 18, y + 22);
-  doc.setFontSize(20);
-  doc.text("+91 93257 69599", M + 18, y + 45);
+  doc.setFontSize(22);
+  doc.text("+91 93257 69599", M + 18, y + 50);
   doc.setFont("helvetica", "normal");
   doc.setFontSize(9);
   doc.text("WhatsApp & Call", W - M - 18, y + 22, { align: "right" });
-  doc.text("jainentdrdevendra@gmail.com", W - M - 18, y + 45, { align: "right" });
+  doc.text("jainentdrdevendra@gmail.com", W - M - 18, y + 38, { align: "right" });
+  doc.text("Iskcon Pride, Deesa Highway, Deesa – 385535", W - M - 18, y + 54, { align: "right" });
 
-  // Render footers on all pages
+  // Footers on all content pages (skip cover = page 1)
   const total = (doc as any).internal.getNumberOfPages();
-  for (let p = 1; p <= total; p++) {
+  for (let p = 2; p <= total; p++) {
     doc.setPage(p);
-    drawFooter(p, total);
+    drawFooter(p - 1, total - 1);
   }
 
   doc.save("Jain-ENT-Post-Operative-Care-Checklist.pdf");
