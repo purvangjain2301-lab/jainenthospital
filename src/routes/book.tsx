@@ -192,7 +192,15 @@ function Book() {
       if (!cashAmount || Number(cashAmount) <= 0) { setError("Please enter the amount paid."); return; }
     }
     if (apptId) {
-      await supabase.rpc("mark_payment_pending_verification", { _id: apptId });
+      const reference = payMethod === "online"
+        ? txnId.trim()
+        : `Cash on ${cashDate} · ₹${cashAmount}`;
+      const { error: rpcErr } = await supabase.rpc("mark_payment_pending_verification", {
+        _id: apptId,
+        _method: payMethod,
+        _reference: reference,
+      });
+      if (rpcErr) { setError(rpcErr.message); return; }
     }
     const paymentLine = payMethod === "online"
       ? `Payment: ₹${PUBLIC_FEE} - Online · Txn ID: ${txnId.trim()} (pending verification)`
