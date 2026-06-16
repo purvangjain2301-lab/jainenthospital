@@ -23,15 +23,18 @@ export const Route = createFileRoute("/book")({
 });
 
 const DEFAULT_SLOTS = ["10:00 AM", "11:00 AM", "12:00 PM", "01:00 PM", "03:00 PM", "04:00 PM", "05:00 PM", "06:00 PM"];
-const RAZORPAY_PAYMENT_LINK = "https://rzp.io/rzp/3hpqLFJU";
-const MAX_CAPACITY = 12;
+const RAZORPAY_PAYMENT_LINK = "https://rzp.io/rzp/WDAOAmmE";
+const MAX_CAPACITY = 30;
 const LANGUAGES = ["Hindi", "English", "Gujarati", "Marathi"] as const;
 
 type Step = "form" | "payment" | "confirm" | "done";
 type SlotInfo = { time_label: string; max_capacity: number; is_blocked: boolean; booked: number };
 type PayMethod = "online" | "cash";
 
-const CONSULT_FEE = 518;
+// Displayed publicly across the booking flow
+const PUBLIC_FEE = 500;
+// Final charged amount (shown only on the success / confirmation screen)
+const FINAL_FEE = 518;
 
 const emptyForm = () => ({
   name: "", age: "", phone: "", email: "", date: "", slot: "", concern: "",
