@@ -197,7 +197,7 @@ function Book() {
       <PageHero
         eyebrow="Appointments"
         title="Book your ENT or face-surgery consultation."
-        subtitle="Tell us when you'd like to visit. The ₹518 consultation fee appears only at the secure payment step — never before."
+        subtitle="Tell us when you'd like to visit. The ₹500 consultation fee appears only at the secure payment step — never before."
       />
 
       <section className="py-14">
@@ -416,7 +416,7 @@ function Book() {
                     <Field label="Amount paid (₹)" required>
                       <input value={cashAmount} inputMode="numeric"
                         onChange={e => setCashAmount(e.target.value.replace(/[^\d]/g, ""))}
-                        className="input" placeholder="e.g. 518" />
+                        className="input" placeholder="e.g. 500" />
                     </Field>
                   </div>
                 )}
@@ -451,12 +451,14 @@ function Book() {
                   </p>
                 )}
                 <p className="text-muted-foreground mt-2 text-sm">
-                  Payment received · ₹{PUBLIC_FEE}. We've sent a WhatsApp confirmation. Our team will reach you
+                  Payment received · ₹{FINAL_FEE} (incl. all charges). We've sent a WhatsApp confirmation. Our team will reach you
                   within clinic hours ({CLINIC.hours.weekdays}).
                 </p>
-                <p className="mt-3 text-sm text-primary bg-primary/5 ring-1 ring-primary/15 rounded-xl p-3">
-                  💡 Tip: Save your phone number — you can view & manage this appointment anytime at
-                  <b> My Appointments</b> using just your phone number or email.
+                <div className="mt-3 inline-flex items-center gap-2 rounded-full bg-amber-50 text-amber-700 ring-1 ring-amber-200 px-3 py-1.5 text-xs font-semibold">
+                  <Clock className="h-3.5 w-3.5" /> Payment status: Pending verification
+                </div>
+                <p className="mt-2 text-xs text-muted-foreground">
+                  Our team will mark your payment as <b>Verified</b> after confirming the transaction. You can track this on <b>My Appointments</b>.
                 </p>
                 <div className="mt-5 flex flex-wrap gap-3">
                   <Link to="/my-appointments"
