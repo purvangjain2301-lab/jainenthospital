@@ -175,7 +175,7 @@ function Book() {
       await supabase.rpc("mark_payment_pending_verification", { _id: apptId });
     }
     const paymentLine = payMethod === "online"
-      ? `Payment: ₹${CONSULT_FEE} - Online · Txn ID: ${txnId.trim()} (pending verification)`
+      ? `Payment: ₹${PUBLIC_FEE} - Online · Txn ID: ${txnId.trim()} (pending verification)`
       : `Payment: ₹${cashAmount} - Cash · Paid on ${cashDate} (pending verification)`;
     const msg = [
       `*Appointment request — Jain ENT Hospital*`,
@@ -335,7 +335,7 @@ function Book() {
                   {token !== null && <Row k="Token #"  v={String(token)} />}
                   <div className="border-t border-border pt-2 mt-2 flex justify-between font-bold text-primary">
                     <span>Consultation fee</span>
-                    <span className="text-crimson text-lg">₹{CONSULT_FEE}</span>
+                    <span className="text-crimson text-lg">₹{PUBLIC_FEE}</span>
                   </div>
                 </div>
 
@@ -349,7 +349,7 @@ function Book() {
                 <div className="mt-6 flex flex-wrap gap-3">
                   <button onClick={payNow}
                     className="inline-flex items-center gap-2 rounded-full bg-crimson text-crimson-foreground px-7 py-3.5 text-sm font-semibold">
-                    <CreditCard className="h-4 w-4" /> Pay ₹{CONSULT_FEE} <ExternalLink className="h-3.5 w-3.5 opacity-80" />
+                    <CreditCard className="h-4 w-4" /> Pay ₹{PUBLIC_FEE} <ExternalLink className="h-3.5 w-3.5 opacity-80" />
                   </button>
                   <button onClick={iHavePaid}
                     className="inline-flex items-center gap-2 rounded-full bg-emerald-600 text-white px-5 py-3.5 text-sm font-semibold">
@@ -451,7 +451,7 @@ function Book() {
                   </p>
                 )}
                 <p className="text-muted-foreground mt-2 text-sm">
-                  Payment received · ₹{CONSULT_FEE}. We've sent a WhatsApp confirmation. Our team will reach you
+                  Payment received · ₹{PUBLIC_FEE}. We've sent a WhatsApp confirmation. Our team will reach you
                   within clinic hours ({CLINIC.hours.weekdays}).
                 </p>
                 <p className="mt-3 text-sm text-primary bg-primary/5 ring-1 ring-primary/15 rounded-xl p-3">
@@ -482,14 +482,14 @@ function Book() {
               <ol className="mt-4 space-y-3 text-sm opacity-95">
                 <li className="flex gap-3"><Step n={1} /> Fill in your details and pick an available slot.</li>
                 <li className="flex gap-3"><Step n={2} /> Get an instant token number.</li>
-                <li className="flex gap-3"><Step n={3} /> Pay ₹{CONSULT_FEE} securely via Razorpay — slot locked instantly.</li>
+                <li className="flex gap-3"><Step n={3} /> Pay ₹{PUBLIC_FEE} securely via Razorpay — slot locked instantly.</li>
                 <li className="flex gap-3"><Step n={4} /> Visit clinic or connect via video on the day.</li>
               </ol>
             </div>
             <div className="rounded-2xl ring-1 ring-border bg-white p-6 space-y-3 text-sm">
               <div className="flex items-center gap-3"><Calendar className="h-4 w-4 text-crimson" /> {CLINIC.hours.weekdays}</div>
               <div className="flex items-center gap-3"><Clock    className="h-4 w-4 text-crimson" /> {CLINIC.hours.sunday}</div>
-              <div className="flex items-center gap-3"><IndianRupee className="h-4 w-4 text-crimson" /> ₹{CONSULT_FEE} — shown only at payment step</div>
+              <div className="flex items-center gap-3"><IndianRupee className="h-4 w-4 text-crimson" /> ₹{PUBLIC_FEE} — shown only at payment step</div>
               <div className="flex items-center gap-3"><Ticket className="h-4 w-4 text-crimson" /> Token issued instantly on booking</div>
             </div>
             <a href={`tel:${telPrimary}`}
