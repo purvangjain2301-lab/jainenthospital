@@ -99,10 +99,30 @@ function Book() {
     setSubmitting(true);
     setError("");
 
+    // Live capacity re-check (in case multiple users grabbed the same slot)
+    const { data: liveAppts } = await supabase
+      .from("appointments")
+      .select("id")
+      .eq("date", form.date)
+      .eq("slot", form.slot)
+      .neq("status", "cancelled");
+    const liveCustom = slotInfo.find(s => s.time_label === form.slot);
+    const liveCap = liveCustom?.max_capacity ?? MAX_CAPACITY;
+    if ((liveAppts?.length ?? 0) >= liveCap) {
+      setError(`Sorry, this slot just filled up (${liveAppts?.length}/${liveCap}). Please pick another slot.`);
+      setSubmitting(false);
+      // refresh availability
+      setForm({ ...form, slot: "" });
+      return;
+    }
+
+    // Server-side atomic allocate (refuses if full / blocked)
     const { data: tokenData, error: tokenErr } = await supabase
       .rpc("allocate_token", { _date: form.date, _slot: form.slot });
     if (tokenErr) {
-      setError(tokenErr.message); setSubmitting(false); return;
+      setError(tokenErr.message); setSubmitting(false);
+      setForm({ ...form, slot: "" });
+      return;
     }
     const newToken = tokenData as number;
 
@@ -172,7 +192,15 @@ function Book() {
       if (!cashAmount || Number(cashAmount) <= 0) { setError("Please enter the amount paid."); return; }
     }
     if (apptId) {
-      await supabase.rpc("mark_payment_pending_verification", { _id: apptId });
+      const reference = payMethod === "online"
+        ? txnId.trim()
+        : `Cash on ${cashDate} · ₹${cashAmount}`;
+      const { error: rpcErr } = await supabase.rpc("mark_payment_pending_verification", {
+        _id: apptId,
+        _method: payMethod,
+        _reference: reference,
+      });
+      if (rpcErr) { setError(rpcErr.message); return; }
     }
     const paymentLine = payMethod === "online"
       ? `Payment: ₹${PUBLIC_FEE} - Online · Txn ID: ${txnId.trim()} (pending verification)`
@@ -457,9 +485,33 @@ function Book() {
                 <div className="mt-3 inline-flex items-center gap-2 rounded-full bg-amber-50 text-amber-700 ring-1 ring-amber-200 px-3 py-1.5 text-xs font-semibold">
                   <Clock className="h-3.5 w-3.5" /> Payment status: Pending verification
                 </div>
-                <p className="mt-2 text-xs text-muted-foreground">
-                  Our team will mark your payment as <b>Verified</b> after confirming the transaction. You can track this on <b>My Appointments</b>.
-                </p>
+
+                {/* Payment timeline */}
+                <div className="mt-5 rounded-2xl ring-1 ring-border bg-[oklch(0.98_0.005_268)] p-5">
+                  <div className="text-xs font-semibold uppercase tracking-wider text-muted-foreground mb-3">Payment timeline</div>
+                  <ol className="relative border-l-2 border-amber-300/60 ml-2 space-y-4">
+                    <li className="pl-4">
+                      <span className="absolute -left-[9px] mt-1 h-4 w-4 rounded-full bg-emerald-500 ring-2 ring-white" />
+                      <div className="text-sm font-semibold text-primary">Submitted by you</div>
+                      <div className="text-xs text-muted-foreground">{new Date().toLocaleString("en-IN")}</div>
+                      <div className="text-xs text-muted-foreground mt-0.5">
+                        Method: <b className="capitalize">{payMethod}</b>
+                        {payMethod === "online" && txnId && <> · Ref: <b>{txnId}</b></>}
+                        {payMethod === "cash" && <> · ₹{cashAmount} on {cashDate}</>}
+                      </div>
+                    </li>
+                    <li className="pl-4">
+                      <span className="absolute -left-[9px] mt-1 h-4 w-4 rounded-full bg-amber-400 ring-2 ring-white animate-pulse" />
+                      <div className="text-sm font-semibold text-amber-700">Pending verification</div>
+                      <div className="text-xs text-muted-foreground">Our team reviews payments within clinic hours.</div>
+                    </li>
+                    <li className="pl-4 opacity-60">
+                      <span className="absolute -left-[9px] mt-1 h-4 w-4 rounded-full bg-slate-300 ring-2 ring-white" />
+                      <div className="text-sm font-semibold text-slate-500">Verified / Rejected</div>
+                      <div className="text-xs text-muted-foreground">You'll see the final status on <b>My Appointments</b>.</div>
+                    </li>
+                  </ol>
+                </div>
                 <div className="mt-5 flex flex-wrap gap-3">
                   <Link to="/my-appointments"
                     className="inline-flex items-center gap-2 rounded-full bg-crimson text-crimson-foreground px-5 py-2.5 text-sm font-semibold">

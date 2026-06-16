@@ -555,6 +555,10 @@ const PAY_LABEL: Record<string, string> = {
 function AppointmentsTab() {
   const [appts, setAppts] = useState<Appointment[]>([]);
   const [filter, setFilter] = useState<"all"|"pending"|"confirmed"|"cancelled"|"pending_payment">("all");
+  const [rejectFor, setRejectFor] = useState<Appointment | null>(null);
+  const [rejectReason, setRejectReason] = useState("");
+  const [actionMsg, setActionMsg] = useState("");
+  const [busyId, setBusyId] = useState<string | null>(null);
 
   async function load() {
     const { data } = await supabase.from("appointments").select("*").order("created_at", { ascending: false });
@@ -566,8 +570,41 @@ function AppointmentsTab() {
     await supabase.from("appointments").update({ status }).eq("id", id);
     load();
   }
-  async function setPayment(id: string, payment_status: string) {
-    await supabase.from("appointments").update({ payment_status }).eq("id", id);
+
+  async function approvePayment(a: Appointment) {
+    setActionMsg("");
+    if (a.payment_status === "verified") {
+      setActionMsg("This payment is already verified."); return;
+    }
+    if (!a.payment_method || !a.payment_reference || a.payment_reference.trim().length < 3) {
+      setActionMsg("Cannot approve: transaction / payment details are missing. Ask the patient to resubmit.");
+      return;
+    }
+    setBusyId(a.id);
+    const { error } = await supabase.rpc("admin_verify_payment", { _id: a.id });
+    setBusyId(null);
+    if (error) { setActionMsg(error.message); return; }
+    setActionMsg("✓ Payment verified.");
+    load();
+  }
+
+  function openReject(a: Appointment) {
+    setRejectFor(a); setRejectReason(""); setActionMsg("");
+  }
+
+  async function confirmReject() {
+    if (!rejectFor) return;
+    if (rejectReason.trim().length < 3) {
+      setActionMsg("Please write a reason (at least 3 characters)."); return;
+    }
+    setBusyId(rejectFor.id);
+    const { error } = await supabase.rpc("admin_reject_payment", {
+      _id: rejectFor.id, _reason: rejectReason.trim(),
+    });
+    setBusyId(null);
+    if (error) { setActionMsg(error.message); return; }
+    setRejectFor(null); setRejectReason("");
+    setActionMsg("Payment rejected. The patient will see your reason.");
     load();
   }
 
@@ -576,6 +613,8 @@ function AppointmentsTab() {
     filter === "all" ? appts
     : filter === "pending_payment" ? appts.filter(a => a.payment_status === "pending_verification")
     : appts.filter(a => a.status === filter);
+
+  function fmt(d?: string | null) { return d ? new Date(d).toLocaleString("en-IN") : "—"; }
 
   return (
     <div>
@@ -591,6 +630,8 @@ function AppointmentsTab() {
           </button>
         </div>
       )}
+      {actionMsg && <p className="mt-3 text-sm text-primary">{actionMsg}</p>}
+
       <div className="flex gap-2 flex-wrap mt-4 mb-6">
         {(["all","pending","confirmed","cancelled","pending_payment"] as const).map(f => (
           <button key={f} onClick={() => setFilter(f)}
@@ -623,6 +664,17 @@ function AppointmentsTab() {
                     </span>
                   </div>
                 </div>
+
+                {(a.payment_method || a.payment_reference || a.payment_submitted_at) && (
+                  <div className="mt-3 rounded-xl bg-[oklch(0.98_0.005_268)] ring-1 ring-border p-3 text-xs text-muted-foreground space-y-1">
+                    <div><b>Payment method:</b> <span className="capitalize">{a.payment_method ?? "—"}</span></div>
+                    <div><b>Reference / Txn:</b> {a.payment_reference ?? "—"}</div>
+                    <div><b>Submitted:</b> {fmt(a.payment_submitted_at)}</div>
+                    {a.payment_verified_at && <div className="text-emerald-700"><b>Verified:</b> {fmt(a.payment_verified_at)}</div>}
+                    {a.payment_rejected_at && <div className="text-red-600"><b>Rejected:</b> {fmt(a.payment_rejected_at)} — {a.payment_rejection_reason}</div>}
+                  </div>
+                )}
+
                 <div className="mt-3 flex gap-2 flex-wrap">
                   {a.status === "pending" && (
                     <>
@@ -638,12 +690,16 @@ function AppointmentsTab() {
                   )}
                   {a.payment_status === "pending_verification" && (
                     <>
-                      <ActionBtn color="emerald" onClick={() => setPayment(a.id, "verified")} icon={CheckCircle2}>Approve payment</ActionBtn>
-                      <ActionBtn color="red" onClick={() => setPayment(a.id, "rejected")} icon={XCircle}>Reject payment</ActionBtn>
+                      <ActionBtn color="emerald" onClick={() => approvePayment(a)} icon={CheckCircle2}>
+                        {busyId === a.id ? "…" : "Approve payment"}
+                      </ActionBtn>
+                      <ActionBtn color="red" onClick={() => openReject(a)} icon={XCircle}>Reject payment</ActionBtn>
                     </>
                   )}
-                  {(a.payment_status === "unpaid" || a.payment_status === "rejected") && (
-                    <ActionBtn color="emerald" onClick={() => setPayment(a.id, "verified")} icon={CheckCircle2}>Mark verified</ActionBtn>
+                  {a.payment_status === "verified" && (
+                    <span className="inline-flex items-center gap-1.5 rounded-lg bg-emerald-50 text-emerald-700 ring-1 ring-emerald-200 px-3 py-1.5 text-xs font-semibold">
+                      <CheckCircle2 className="h-3.5 w-3.5" /> Verified — locked
+                    </span>
                   )}
                 </div>
               </div>
@@ -651,6 +707,32 @@ function AppointmentsTab() {
           </div>
         )
       }
+
+      {rejectFor && (
+        <div className="fixed inset-0 z-50 bg-black/40 flex items-center justify-center p-4" onClick={() => setRejectFor(null)}>
+          <div className="bg-white rounded-2xl ring-1 ring-border p-6 w-full max-w-md shadow-xl" onClick={e => e.stopPropagation()}>
+            <h3 className="font-display text-lg font-bold text-primary">Reject payment</h3>
+            <p className="text-sm text-muted-foreground mt-1">
+              Tell the patient why their payment couldn't be verified. They will see this on My Appointments.
+            </p>
+            <textarea
+              value={rejectReason}
+              onChange={e => setRejectReason(e.target.value)}
+              rows={4}
+              placeholder="e.g. Transaction ID not found in our Razorpay dashboard. Please share a screenshot."
+              className="mt-3 w-full border border-border rounded-xl px-3 py-2.5 text-sm outline-none focus:ring-2 focus:ring-primary/30"
+            />
+            {actionMsg && <p className="mt-2 text-xs text-red-500">{actionMsg}</p>}
+            <div className="mt-4 flex gap-2 justify-end">
+              <button onClick={() => setRejectFor(null)} className="rounded-lg ring-1 ring-border px-4 py-2 text-sm font-semibold">Cancel</button>
+              <button onClick={confirmReject} disabled={busyId === rejectFor.id}
+                className="rounded-lg bg-red-600 text-white px-4 py-2 text-sm font-semibold disabled:opacity-50">
+                {busyId === rejectFor.id ? "Rejecting…" : "Reject payment"}
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }

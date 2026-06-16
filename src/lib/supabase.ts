@@ -41,6 +41,13 @@ export interface Appointment {
   razorpay_order_id?: string | null;
   token_number?: number | null;
   created_at: string;
+  payment_method?: string | null;
+  payment_reference?: string | null;
+  payment_submitted_at?: string | null;
+  payment_verified_at?: string | null;
+  payment_rejected_at?: string | null;
+  payment_rejection_reason?: string | null;
+  payment_verified_by?: string | null;
 }
 
 export interface Slot {

@@ -24,7 +24,14 @@ export type Database = {
           id: string
           mode: string
           name: string
+          payment_method: string | null
+          payment_reference: string | null
+          payment_rejected_at: string | null
+          payment_rejection_reason: string | null
           payment_status: string
+          payment_submitted_at: string | null
+          payment_verified_at: string | null
+          payment_verified_by: string | null
           phone: string
           razorpay_order_id: string | null
           slot: string
@@ -41,7 +48,14 @@ export type Database = {
           id?: string
           mode?: string
           name: string
+          payment_method?: string | null
+          payment_reference?: string | null
+          payment_rejected_at?: string | null
+          payment_rejection_reason?: string | null
           payment_status?: string
+          payment_submitted_at?: string | null
+          payment_verified_at?: string | null
+          payment_verified_by?: string | null
           phone: string
           razorpay_order_id?: string | null
           slot: string
@@ -58,7 +72,14 @@ export type Database = {
           id?: string
           mode?: string
           name?: string
+          payment_method?: string | null
+          payment_reference?: string | null
+          payment_rejected_at?: string | null
+          payment_rejection_reason?: string | null
           payment_status?: string
+          payment_submitted_at?: string | null
+          payment_verified_at?: string | null
+          payment_verified_by?: string | null
           phone?: string
           razorpay_order_id?: string | null
           slot?: string
@@ -280,6 +301,11 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
+      admin_reject_payment: {
+        Args: { _id: string; _reason: string }
+        Returns: undefined
+      }
+      admin_verify_payment: { Args: { _id: string }; Returns: undefined }
       allocate_token: {
         Args: { _date: string; _slot: string }
         Returns: number
@@ -300,7 +326,14 @@ export type Database = {
           id: string
           mode: string
           name: string
+          payment_method: string | null
+          payment_reference: string | null
+          payment_rejected_at: string | null
+          payment_rejection_reason: string | null
           payment_status: string
+          payment_submitted_at: string | null
+          payment_verified_at: string | null
+          payment_verified_by: string | null
           phone: string
           razorpay_order_id: string | null
           slot: string
@@ -322,10 +355,12 @@ export type Database = {
         }
         Returns: boolean
       }
-      mark_payment_pending_verification: {
-        Args: { _id: string }
-        Returns: undefined
-      }
+      mark_payment_pending_verification:
+        | { Args: { _id: string }; Returns: undefined }
+        | {
+            Args: { _id: string; _method?: string; _reference?: string }
+            Returns: undefined
+          }
     }
     Enums: {
       app_role: "admin"
