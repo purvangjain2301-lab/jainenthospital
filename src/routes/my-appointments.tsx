@@ -308,6 +308,8 @@ function PatientDashboard(props: {
             <div className="space-y-3">
               {appts.map(a => {
                 const upcoming = a.date >= today && a.status !== "cancelled";
+                const fmt = (d?: string | null) => d ? new Date(d).toLocaleString("en-IN") : null;
+                const hasTimeline = a.payment_submitted_at || a.payment_verified_at || a.payment_rejected_at;
                 return (
                   <div key={a.id} className="rounded-2xl bg-white ring-1 ring-border p-5">
                     <div className="flex items-start justify-between gap-3 flex-wrap">
@@ -324,6 +326,8 @@ function PatientDashboard(props: {
                               ? "bg-emerald-100 text-emerald-700"
                               : a.payment_status === "pending_verification"
                               ? "bg-amber-100 text-amber-700"
+                              : a.payment_status === "rejected"
+                              ? "bg-red-100 text-red-600"
                               : "bg-slate-100 text-slate-600"
                           }`}>
                             {a.payment_status === "pending_verification" ? "pending verification" : a.payment_status}
@@ -340,6 +344,49 @@ function PatientDashboard(props: {
                         </button>
                       )}
                     </div>
+
+                    {a.payment_status === "rejected" && a.payment_rejection_reason && (
+                      <div className="mt-3 rounded-xl bg-red-50 ring-1 ring-red-200 p-3 text-sm text-red-800">
+                        <div className="font-semibold">Payment rejected by clinic</div>
+                        <div className="mt-1 text-xs">Reason: {a.payment_rejection_reason}</div>
+                        <Link to="/book" className="mt-2 inline-block text-xs font-semibold underline">Resubmit / book again →</Link>
+                      </div>
+                    )}
+
+                    {hasTimeline && (
+                      <div className="mt-3 rounded-xl ring-1 ring-border bg-[oklch(0.98_0.005_268)] p-3">
+                        <div className="text-[11px] font-semibold uppercase tracking-wider text-muted-foreground mb-2">Payment timeline</div>
+                        <ol className="relative border-l-2 border-border ml-2 space-y-2">
+                          {a.payment_submitted_at && (
+                            <li className="pl-3 relative">
+                              <span className="absolute -left-[7px] top-1 h-3 w-3 rounded-full bg-emerald-500 ring-2 ring-white" />
+                              <div className="text-xs font-semibold text-primary">Submitted by you</div>
+                              <div className="text-[11px] text-muted-foreground">{fmt(a.payment_submitted_at)} · {a.payment_method ?? "—"}{a.payment_reference ? ` · ${a.payment_reference}` : ""}</div>
+                            </li>
+                          )}
+                          {a.payment_status === "pending_verification" && (
+                            <li className="pl-3 relative">
+                              <span className="absolute -left-[7px] top-1 h-3 w-3 rounded-full bg-amber-400 ring-2 ring-white animate-pulse" />
+                              <div className="text-xs font-semibold text-amber-700">Pending clinic verification</div>
+                            </li>
+                          )}
+                          {a.payment_verified_at && (
+                            <li className="pl-3 relative">
+                              <span className="absolute -left-[7px] top-1 h-3 w-3 rounded-full bg-emerald-600 ring-2 ring-white" />
+                              <div className="text-xs font-semibold text-emerald-700">Verified by clinic</div>
+                              <div className="text-[11px] text-muted-foreground">{fmt(a.payment_verified_at)}</div>
+                            </li>
+                          )}
+                          {a.payment_rejected_at && (
+                            <li className="pl-3 relative">
+                              <span className="absolute -left-[7px] top-1 h-3 w-3 rounded-full bg-red-500 ring-2 ring-white" />
+                              <div className="text-xs font-semibold text-red-600">Rejected by clinic</div>
+                              <div className="text-[11px] text-muted-foreground">{fmt(a.payment_rejected_at)}</div>
+                            </li>
+                          )}
+                        </ol>
+                      </div>
+                    )}
                   </div>
                 );
               })}
