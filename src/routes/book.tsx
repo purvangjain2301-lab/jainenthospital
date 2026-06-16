@@ -99,10 +99,30 @@ function Book() {
     setSubmitting(true);
     setError("");
 
+    // Live capacity re-check (in case multiple users grabbed the same slot)
+    const { data: liveAppts } = await supabase
+      .from("appointments")
+      .select("id")
+      .eq("date", form.date)
+      .eq("slot", form.slot)
+      .neq("status", "cancelled");
+    const liveCustom = slotInfo.find(s => s.time_label === form.slot);
+    const liveCap = liveCustom?.max_capacity ?? MAX_CAPACITY;
+    if ((liveAppts?.length ?? 0) >= liveCap) {
+      setError(`Sorry, this slot just filled up (${liveAppts?.length}/${liveCap}). Please pick another slot.`);
+      setSubmitting(false);
+      // refresh availability
+      setForm({ ...form, slot: "" });
+      return;
+    }
+
+    // Server-side atomic allocate (refuses if full / blocked)
     const { data: tokenData, error: tokenErr } = await supabase
       .rpc("allocate_token", { _date: form.date, _slot: form.slot });
     if (tokenErr) {
-      setError(tokenErr.message); setSubmitting(false); return;
+      setError(tokenErr.message); setSubmitting(false);
+      setForm({ ...form, slot: "" });
+      return;
     }
     const newToken = tokenData as number;
 
