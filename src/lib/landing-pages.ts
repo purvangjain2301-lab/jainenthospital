@@ -3,7 +3,7 @@ import type { LandingProps } from "@/components/site/LandingPage";
 const drJain = "Prof. Dr. Devendra M. Jain";
 const std = [
   "Single-specialist consultant care — your doctor is the surgeon.",
-  "18+ years of experience, 15+ years as a Teaching Professor.",
+  "18+ years of experience in advanced ENT and head-neck care.",
   "Modern endoscopic & microscopic ENT diagnostics in-clinic.",
   "Honest second-opinion culture — no over-treatment.",
   "Multilingual: Hindi, English, Gujarati, Marathi.",
@@ -247,7 +247,7 @@ export const LANDING_PAGES: Record<string, LandingProps> = {
       "A purpose-built ENT, face surgery and head-neck cancer hospital in the heart of Deesa — modern equipment, single-specialist care, 24×7 emergency.",
     paragraphs: [
       "Jain ENT Hospital is a dedicated ear, nose, throat, face surgery and head-neck cancer care centre on Deesa Highway. Unlike general hospitals where ENT is one of many departments, every facility, instrument, theatre setup and team member at our clinic is built around ENT and head-neck care.",
-      `The hospital is led by ${drJain} — MBBS, MS (ENT) — with 18+ years of experience as a senior consultant and 15+ years as a Teaching Professor. The model is deliberately single-specialist: the doctor who diagnoses you is the same one who performs your surgery and follows you up.`,
+      `The hospital is led by ${drJain} — MBBS, MS (ENT) — with 18+ years of experience as a senior consultant. The model is deliberately single-specialist: the doctor who diagnoses you is the same one who performs your surgery and follows you up.`,
       "Facilities include modern operation theatre with microscopic and endoscopic ENT setup, in-clinic video endoscopy of ear/nose/throat, pure-tone audiometry, tympanometry, dedicated consultation rooms, an in-house pharmacy (Yashvi Medical Store) stocking ENT-specific drops, sprays and post-operative medicines, and a 24×7 emergency line for genuine ENT emergencies.",
       "Patients are welcomed from across Banaskantha, Patan, Sabarkantha, Mehsana, South Rajasthan and worldwide via telemedicine. Free parking is available on-site and most consultations are completed within an hour including diagnostics.",
     ],

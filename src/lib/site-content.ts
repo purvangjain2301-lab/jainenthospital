@@ -33,7 +33,7 @@ export const DEFAULT_CONTENT = {
   footer: {
     tagline: CLINIC.tagline,
     about:
-      "Senior ENT specialist clinic in Deesa, Gujarat — 18+ years of experience, 15+ years as a Teaching Professor.",
+      "Senior ENT specialist clinic in Deesa, Gujarat — 18+ years of experience in advanced ENT and head-neck care.",
     copyright: "© Jain ENT Hospital. All rights reserved.",
   },
   reviews_settings: {

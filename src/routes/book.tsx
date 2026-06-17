@@ -24,11 +24,11 @@ export const Route = createFileRoute("/book")({
 
 const DEFAULT_SLOTS = ["10:00 AM", "11:00 AM", "12:00 PM", "01:00 PM", "03:00 PM", "04:00 PM", "05:00 PM", "06:00 PM"];
 const RAZORPAY_PAYMENT_LINK = "https://rzp.io/rzp/WDAOAmmE";
-const MAX_CAPACITY = 30;
+// No per-slot capacity limit. Admins can still block specific slots via the admin panel.
 const LANGUAGES = ["Hindi", "English", "Gujarati", "Marathi"] as const;
 
 type Step = "form" | "payment" | "confirm" | "done";
-type SlotInfo = { time_label: string; max_capacity: number; is_blocked: boolean; booked: number };
+type SlotInfo = { time_label: string; is_blocked: boolean; booked: number };
 type PayMethod = "online" | "cash";
 
 // Displayed publicly across the booking flow
@@ -64,7 +64,7 @@ function Book() {
     (async () => {
       setLoadingSlots(true);
       const [{ data: customSlots }, { data: appts }] = await Promise.all([
-        supabase.from("slots").select("time_label, max_capacity, is_blocked").eq("date", form.date),
+        supabase.from("slots").select("time_label, is_blocked").eq("date", form.date),
         supabase
           .from("appointments")
           .select("slot")
@@ -82,7 +82,6 @@ function Book() {
         const booked = (appts ?? []).filter((a: any) => a.slot === label).length;
         return {
           time_label: label,
-          max_capacity: custom?.max_capacity ?? MAX_CAPACITY,
           is_blocked: custom?.is_blocked ?? false,
           booked,
         };
@@ -99,22 +98,7 @@ function Book() {
     setSubmitting(true);
     setError("");
 
-    // Live capacity re-check (in case multiple users grabbed the same slot)
-    const { data: liveAppts } = await supabase
-      .from("appointments")
-      .select("id")
-      .eq("date", form.date)
-      .eq("slot", form.slot)
-      .neq("status", "cancelled");
-    const liveCustom = slotInfo.find(s => s.time_label === form.slot);
-    const liveCap = liveCustom?.max_capacity ?? MAX_CAPACITY;
-    if ((liveAppts?.length ?? 0) >= liveCap) {
-      setError(`Sorry, this slot just filled up (${liveAppts?.length}/${liveCap}). Please pick another slot.`);
-      setSubmitting(false);
-      // refresh availability
-      setForm({ ...form, slot: "" });
-      return;
-    }
+    // No capacity limit — only block past-date / admin-blocked slots (enforced server-side in allocate_token).
 
     // Server-side atomic allocate (refuses if full / blocked)
     const { data: tokenData, error: tokenErr } = await supabase
@@ -295,8 +279,7 @@ function Book() {
                     ) : (
                       <div className="mt-2 grid grid-cols-2 sm:grid-cols-3 gap-2">
                         {slotInfo.map(s => {
-                          const full = s.booked >= s.max_capacity;
-                          const disabled = full || s.is_blocked;
+                          const disabled = s.is_blocked;
                           const selected = form.slot === s.time_label;
                           return (
                             <button
@@ -313,7 +296,7 @@ function Book() {
                               <div className="text-sm font-semibold text-primary">{s.time_label}</div>
                               <div className="text-[11px] text-muted-foreground flex items-center gap-1">
                                 <Users className="h-3 w-3" />
-                                {s.is_blocked ? "Blocked" : full ? "Full" : `${s.booked}/${s.max_capacity}`}
+                                {s.is_blocked ? "Blocked" : `${s.booked} booked`}
                               </div>
                             </button>
                           );

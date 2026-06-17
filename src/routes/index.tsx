@@ -13,7 +13,7 @@ export const Route = createFileRoute("/")({
   head: () => ({
     meta: [
       { title: "Best ENT Doctor in Deesa | Prof. Dr. Devendra M. Jain | Jain ENT Hospital" },
-      { name: "description", content: "ENT & Head Neck Surgeon with Cancer Care in Deesa, Gujarat. Prof. Dr. Devendra M. Jain — 18+ years of experience, 15+ years as Teaching Professor. Face surgery, head-neck cancer care & worldwide telemedicine." },
+      { name: "description", content: "ENT & Head Neck Surgeon with Cancer Care in Deesa, Gujarat. Prof. Dr. Devendra M. Jain — 18+ years of experience. Face surgery, head-neck cancer care & worldwide telemedicine." },
       { property: "og:title", content: "Best ENT Doctor in Deesa | Prof. Dr. Devendra M. Jain" },
       { property: "og:description", content: "ENT & Head Neck Surgeon with Cancer Care. 18+ years of experience. Face surgery, head-neck cancer care & worldwide telemedicine." },
       { property: "og:url", content: "https://jainent.lovable.app/" },

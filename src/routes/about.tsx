@@ -8,7 +8,7 @@ export const Route = createFileRoute("/about")({
   head: () => ({
     meta: [
       { title: "Prof. Dr. Devendra M. Jain - ENT & Head Neck Surgeon with Cancer Care | Deesa" },
-      { name: "description", content: "Prof. Dr. Devendra M. Jain — ENT & Head Neck Surgeon with Cancer Care. 18+ years of experience, 15+ years as Teaching Professor. Ex-BJ Medical Pune. Telemedicine worldwide." },
+      { name: "description", content: "Prof. Dr. Devendra M. Jain — ENT & Head Neck Surgeon with Cancer Care. 18+ years of experience. Ex-BJ Medical Pune. Telemedicine worldwide." },
       { property: "og:title", content: "Prof. Dr. Devendra M. Jain - ENT & Head Neck Surgeon with Cancer Care" },
       { property: "og:description", content: "ENT, face surgery & head-neck cancer specialist in Deesa, Gujarat. Telemedicine worldwide." },
       { property: "og:url", content: "https://jainent.lovable.app/about" },
@@ -24,7 +24,7 @@ function About() {
       <PageHero
         eyebrow="About"
         title="Decades of ENT expertise, delivered with compassion."
-        subtitle={`Prof. Dr. Devendra M. Jain has spent 18+ years of experience advancing ear, nose, throat, face surgery and head-neck cancer care — with 15+ years of experience as a Teaching Professor, alongside surgical and community practice, and worldwide telemedicine.`}
+        subtitle={`Prof. Dr. Devendra M. Jain has spent 18+ years of experience advancing ear, nose, throat, face surgery and head-neck cancer care — alongside surgical and community practice, and worldwide telemedicine.`}
       />
 
       <section className="py-16">
@@ -43,7 +43,7 @@ function About() {
                 <div className="flex items-center gap-2"><GraduationCap className="h-4 w-4 text-crimson" /> MBBS, MS — ENT</div>
                 <div className="flex items-center gap-2"><Sparkles className="h-4 w-4 text-crimson" /> Face & Reconstructive Surgery</div>
                 <div className="flex items-center gap-2"><Building2 className="h-4 w-4 text-crimson" /> Ex-BJ Medical College, Pune</div>
-                <div className="flex items-center gap-2"><Users className="h-4 w-4 text-crimson" /> 15+ years of experience as a Teaching Professor</div>
+                <div className="flex items-center gap-2"><Users className="h-4 w-4 text-crimson" /> Patients welcomed from across India & worldwide</div>
               </div>
             </div>
           </div>
@@ -62,7 +62,7 @@ function About() {
 
             <div className="grid sm:grid-cols-2 gap-5">
               {[
-                { icon: GraduationCap, t: "Academic excellence", d: "MBBS followed by MS in ENT. 15+ years of experience as a Teaching Professor, continuing to teach and mentor postgraduates." },
+                { icon: GraduationCap, t: "Academic excellence", d: "MBBS followed by MS in ENT, with continuing academic engagement in mentoring postgraduates." },
                 { icon: Microscope, t: "Cancer surgery experience", d: "Years of focused practice in head-neck oncology — oral, throat, laryngeal, thyroid and salivary gland cancers, including reconstructive procedures." },
                 { icon: Sparkles, t: "Facial surgery expertise", d: "Rhinoplasty, otoplasty, post-cancer reconstruction, facial trauma repair and scar management alongside comprehensive ENT care." },
                 { icon: Stethoscope, t: "Surgical expertise", d: "Endoscopic sinus surgery, ear microsurgery, advanced airway care, and complex referral cases." },
