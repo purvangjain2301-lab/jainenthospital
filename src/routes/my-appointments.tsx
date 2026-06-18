@@ -4,8 +4,11 @@ import { SiteLayout, PageHero } from "@/components/site/SiteLayout";
 import { supabase, type Appointment } from "@/lib/supabase";
 import { lovable } from "@/integrations/lovable/index";
 import {
-  Lock, Mail, Eye, EyeOff, Ticket, XCircle, CalendarCheck, LogOut, Search, Phone,
+  Lock, Mail, Eye, EyeOff, Ticket, XCircle, CalendarCheck, LogOut, Search, Phone, CalendarClock, Users,
 } from "lucide-react";
+import { toast } from "sonner";
+
+const DEFAULT_SLOTS = ["10:00 AM", "11:00 AM", "12:00 PM", "01:00 PM", "03:00 PM", "04:00 PM", "05:00 PM", "06:00 PM"];
 
 export const Route = createFileRoute("/my-appointments")({
   head: () => ({
