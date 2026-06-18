@@ -357,10 +357,16 @@ function PatientDashboard(props: {
                         <div className="mt-1.5 text-sm text-foreground italic">"{a.concern}"</div>
                       </div>
                       {upcoming && (
-                        <button onClick={() => cancel(a)}
-                          className="inline-flex items-center gap-1.5 rounded-lg bg-red-50 text-red-600 hover:bg-red-100 ring-1 ring-red-200 px-3 py-1.5 text-xs font-semibold">
-                          <XCircle className="h-3.5 w-3.5" /> Cancel
-                        </button>
+                        <div className="flex flex-col gap-1.5">
+                          <button onClick={() => setRescheduleFor(a)}
+                            className="inline-flex items-center gap-1.5 rounded-lg bg-primary/5 text-primary hover:bg-primary/10 ring-1 ring-primary/20 px-3 py-1.5 text-xs font-semibold">
+                            <CalendarClock className="h-3.5 w-3.5" /> Reschedule
+                          </button>
+                          <button onClick={() => cancel(a)}
+                            className="inline-flex items-center gap-1.5 rounded-lg bg-red-50 text-red-600 hover:bg-red-100 ring-1 ring-red-200 px-3 py-1.5 text-xs font-semibold">
+                            <XCircle className="h-3.5 w-3.5" /> Cancel
+                          </button>
+                        </div>
                       )}
                     </div>
 
