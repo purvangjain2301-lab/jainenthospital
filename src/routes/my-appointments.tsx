@@ -270,6 +270,8 @@ function PatientDashboard(props: {
   }
   useEffect(() => { load(); /* eslint-disable-next-line react-hooks/exhaustive-deps */ }, [authedUser?.id, contact]);
 
+  const [rescheduleFor, setRescheduleFor] = useState<Appointment | null>(null);
+
   async function cancel(a: Appointment) {
     if (!confirm("Cancel this appointment?")) return;
     if (contact) {
@@ -277,6 +279,20 @@ function PatientDashboard(props: {
     } else {
       await supabase.rpc("cancel_my_appointment", { _id: a.id });
     }
+    load();
+  }
+
+  async function doReschedule(a: Appointment, newDate: string, newSlot: string) {
+    const { data, error } = contact
+      ? await supabase.rpc("reschedule_appointment_by_contact", {
+          _id: a.id, _contact: contact, _new_date: newDate, _new_slot: newSlot,
+        })
+      : await supabase.rpc("reschedule_my_appointment", {
+          _id: a.id, _new_date: newDate, _new_slot: newSlot,
+        });
+    if (error) { toast.error(error.message); return; }
+    toast.success(`Rescheduled to ${newDate} at ${newSlot}${data ? ` · Token #${data}` : ""}`);
+    setRescheduleFor(null);
     load();
   }
 
