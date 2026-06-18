@@ -143,3 +143,18 @@ html { scroll-behavior: smooth; }
 [id^="lovable-badge"],
 a[href*="lovable.dev"][target="_blank"],
 .lovable-badge { display: none !important; visibility: hidden !important; }
+[data-lovable-badge],
+#lovable-badge,
+[class*="lovable-badge"],
+[id*="lovable-badge"],
+a[href*="lovable.dev"],
+div[class*="powered-by-lovable"],
+iframe[src*="lovable"] {
+  width: 0 !important;
+  height: 0 !important;
+  opacity: 0 !important;
+  transform: scale(0) !important;
+  pointer-events: none !important;
+  position: fixed !important;
+  z-index: -9999 !important;
+}
