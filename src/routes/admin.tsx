@@ -4,7 +4,7 @@ import {
   LayoutDashboard, Image as ImageIcon, BookOpen, CalendarCheck, LogOut,
   Plus, Trash2, Eye, EyeOff, Upload, CheckCircle2, XCircle,
   Clock, Users, TrendingUp, FileText, Lock, Mail, ShieldAlert,
-  Settings, MessageSquare,
+  Settings, MessageSquare, Search, Download, ArrowUpDown,
 } from "lucide-react";
 import { supabase, type GalleryItem, type BlogPost, type BlogPostDraft, type Appointment } from "@/lib/supabase";
 import { ContentTab } from "@/components/admin/ContentTab";
@@ -552,9 +552,18 @@ const PAY_LABEL: Record<string, string> = {
   rejected: "rejected",
 };
 
+const STATUS_OPTIONS: Appointment["status"][] = ["pending", "confirmed", "cancelled", "visited", "no-show"] as any;
+type SortKey = "date" | "created_at" | "token_number" | "name";
+
 function AppointmentsTab() {
   const [appts, setAppts] = useState<Appointment[]>([]);
-  const [filter, setFilter] = useState<"all"|"pending"|"confirmed"|"cancelled"|"pending_payment">("all");
+  const [statusFilter, setStatusFilter] = useState<string>("all");
+  const [payFilter, setPayFilter] = useState<string>("all");
+  const [fromDate, setFromDate] = useState<string>("");
+  const [toDate, setToDate] = useState<string>("");
+  const [search, setSearch] = useState<string>("");
+  const [sortKey, setSortKey] = useState<SortKey>("created_at");
+  const [sortDir, setSortDir] = useState<"asc" | "desc">("desc");
   const [rejectFor, setRejectFor] = useState<Appointment | null>(null);
   const [rejectReason, setRejectReason] = useState("");
   const [actionMsg, setActionMsg] = useState("");
@@ -567,15 +576,15 @@ function AppointmentsTab() {
   useEffect(() => { load(); }, []);
 
   async function updateStatus(id: string, status: Appointment["status"]) {
-    await supabase.from("appointments").update({ status }).eq("id", id);
+    const { error } = await supabase.from("appointments").update({ status }).eq("id", id);
+    if (error) { setActionMsg(error.message); return; }
+    setActionMsg("✓ Status updated.");
     load();
   }
 
   async function approvePayment(a: Appointment) {
     setActionMsg("");
-    if (a.payment_status === "verified") {
-      setActionMsg("This payment is already verified."); return;
-    }
+    if (a.payment_status === "verified") { setActionMsg("This payment is already verified."); return; }
     if (!a.payment_method || !a.payment_reference || a.payment_reference.trim().length < 3) {
       setActionMsg("Cannot approve: transaction / payment details are missing. Ask the patient to resubmit.");
       return;
@@ -588,19 +597,13 @@ function AppointmentsTab() {
     load();
   }
 
-  function openReject(a: Appointment) {
-    setRejectFor(a); setRejectReason(""); setActionMsg("");
-  }
+  function openReject(a: Appointment) { setRejectFor(a); setRejectReason(""); setActionMsg(""); }
 
   async function confirmReject() {
     if (!rejectFor) return;
-    if (rejectReason.trim().length < 3) {
-      setActionMsg("Please write a reason (at least 3 characters)."); return;
-    }
+    if (rejectReason.trim().length < 3) { setActionMsg("Please write a reason (at least 3 characters)."); return; }
     setBusyId(rejectFor.id);
-    const { error } = await supabase.rpc("admin_reject_payment", {
-      _id: rejectFor.id, _reason: rejectReason.trim(),
-    });
+    const { error } = await supabase.rpc("admin_reject_payment", { _id: rejectFor.id, _reason: rejectReason.trim() });
     setBusyId(null);
     if (error) { setActionMsg(error.message); return; }
     setRejectFor(null); setRejectReason("");
@@ -608,13 +611,55 @@ function AppointmentsTab() {
     load();
   }
 
-  const pendingPayCount = appts.filter(a => a.payment_status === "pending_verification").length;
-  const visible =
-    filter === "all" ? appts
-    : filter === "pending_payment" ? appts.filter(a => a.payment_status === "pending_verification")
-    : appts.filter(a => a.status === filter);
-
   function fmt(d?: string | null) { return d ? new Date(d).toLocaleString("en-IN") : "—"; }
+
+  // ── filter + sort ────────────────────────────────────────────────────────
+  const q = search.trim().toLowerCase();
+  const filtered = appts.filter(a => {
+    if (statusFilter !== "all" && a.status !== statusFilter) return false;
+    if (payFilter !== "all" && a.payment_status !== payFilter) return false;
+    if (fromDate && a.date < fromDate) return false;
+    if (toDate && a.date > toDate) return false;
+    if (q) {
+      const hay = `${a.name ?? ""} ${a.phone ?? ""} ${a.email ?? ""} ${a.concern ?? ""}`.toLowerCase();
+      if (!hay.includes(q)) return false;
+    }
+    return true;
+  });
+  const sorted = [...filtered].sort((a: any, b: any) => {
+    const av = a[sortKey] ?? "";
+    const bv = b[sortKey] ?? "";
+    if (av < bv) return sortDir === "asc" ? -1 : 1;
+    if (av > bv) return sortDir === "asc" ? 1 : -1;
+    return 0;
+  });
+  function toggleSort(k: SortKey) {
+    if (sortKey === k) setSortDir(d => d === "asc" ? "desc" : "asc");
+    else { setSortKey(k); setSortDir(k === "name" ? "asc" : "desc"); }
+  }
+
+  const pendingPayCount = appts.filter(a => a.payment_status === "pending_verification").length;
+
+  function exportCSV() {
+    const headers = ["Date","Slot","Token","Name","Age","Phone","Email","Mode","Concern","Status","Payment Status","Payment Method","Payment Reference","Created At"];
+    const rows = sorted.map(a => [
+      a.date, a.slot, a.token_number ?? "", a.name ?? "", a.age ?? "", a.phone ?? "", a.email ?? "",
+      a.mode ?? "", a.concern ?? "", a.status, a.payment_status,
+      a.payment_method ?? "", a.payment_reference ?? "", a.created_at ?? "",
+    ]);
+    const esc = (v: any) => {
+      const s = String(v ?? "");
+      return /[",\n]/.test(s) ? `"${s.replace(/"/g, '""')}"` : s;
+    };
+    const csv = [headers, ...rows].map(r => r.map(esc).join(",")).join("\n");
+    const blob = new Blob([csv], { type: "text/csv;charset=utf-8;" });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = `appointments-${new Date().toISOString().slice(0,10)}.csv`;
+    a.click();
+    URL.revokeObjectURL(url);
+  }
 
   return (
     <div>
@@ -624,7 +669,7 @@ function AppointmentsTab() {
           <div className="text-sm text-amber-800">
             <b>{pendingPayCount}</b> payment{pendingPayCount > 1 ? "s" : ""} awaiting your verification.
           </div>
-          <button onClick={() => setFilter("pending_payment")}
+          <button onClick={() => setPayFilter("pending_verification")}
             className="rounded-full bg-amber-600 text-white px-4 py-1.5 text-xs font-semibold">
             Review pending payments
           </button>
@@ -632,33 +677,95 @@ function AppointmentsTab() {
       )}
       {actionMsg && <p className="mt-3 text-sm text-primary">{actionMsg}</p>}
 
-      <div className="flex gap-2 flex-wrap mt-4 mb-6">
-        {(["all","pending","confirmed","cancelled","pending_payment"] as const).map(f => (
-          <button key={f} onClick={() => setFilter(f)}
-            className={`rounded-full px-4 py-1.5 text-xs font-semibold capitalize transition ${filter === f ? "bg-primary text-primary-foreground" : "ring-1 ring-border text-muted-foreground hover:bg-white"}`}>
-            {f === "pending_payment" ? "Pending payment" : f}
-            {" "}({f === "all" ? appts.length
-              : f === "pending_payment" ? pendingPayCount
-              : appts.filter(a => a.status === f).length})
+      {/* Filters */}
+      <div className="mt-4 rounded-2xl bg-white ring-1 ring-border p-4 space-y-3">
+        <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-3">
+          <div>
+            <Label>Status</Label>
+            <select value={statusFilter} onChange={e => setStatusFilter(e.target.value)}
+              className="mt-1.5 w-full border border-border rounded-xl px-3 py-2 text-sm outline-none focus:ring-2 focus:ring-primary/30">
+              <option value="all">All statuses</option>
+              {STATUS_OPTIONS.map(s => <option key={s} value={s}>{s}</option>)}
+            </select>
+          </div>
+          <div>
+            <Label>Payment</Label>
+            <select value={payFilter} onChange={e => setPayFilter(e.target.value)}
+              className="mt-1.5 w-full border border-border rounded-xl px-3 py-2 text-sm outline-none focus:ring-2 focus:ring-primary/30">
+              <option value="all">All payments</option>
+              <option value="unpaid">Unpaid</option>
+              <option value="pending_verification">Pending verification</option>
+              <option value="verified">Verified</option>
+              <option value="paid">Paid</option>
+              <option value="rejected">Rejected</option>
+            </select>
+          </div>
+          <div>
+            <Label>From date</Label>
+            <input type="date" value={fromDate} onChange={e => setFromDate(e.target.value)}
+              className="mt-1.5 w-full border border-border rounded-xl px-3 py-2 text-sm outline-none focus:ring-2 focus:ring-primary/30" />
+          </div>
+          <div>
+            <Label>To date</Label>
+            <input type="date" value={toDate} onChange={e => setToDate(e.target.value)}
+              className="mt-1.5 w-full border border-border rounded-xl px-3 py-2 text-sm outline-none focus:ring-2 focus:ring-primary/30" />
+          </div>
+        </div>
+        <div className="flex gap-3 flex-wrap items-end">
+          <div className="flex-1 min-w-[200px]">
+            <Label>Search (name / phone / email / concern)</Label>
+            <div className="relative mt-1.5">
+              <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+              <input value={search} onChange={e => setSearch(e.target.value)} placeholder="Type to filter…"
+                className="w-full border border-border rounded-xl pl-10 pr-3 py-2 text-sm outline-none focus:ring-2 focus:ring-primary/30" />
+            </div>
+          </div>
+          <button onClick={() => { setStatusFilter("all"); setPayFilter("all"); setFromDate(""); setToDate(""); setSearch(""); }}
+            className="rounded-xl ring-1 ring-border px-4 py-2 text-sm font-semibold">Clear</button>
+          <button onClick={exportCSV}
+            className="inline-flex items-center gap-1.5 rounded-xl bg-primary text-primary-foreground px-4 py-2 text-sm font-semibold">
+            <Download className="h-4 w-4" /> Export CSV
           </button>
-        ))}
+        </div>
+        <div className="flex gap-3 flex-wrap items-center text-xs text-muted-foreground">
+          <span><b className="text-primary">{sorted.length}</b> shown</span>
+          <span>·</span>
+          <span>{appts.length} total</span>
+          <span className="ml-auto flex gap-1">
+            Sort:
+            {(["date","created_at","token_number","name"] as SortKey[]).map(k => (
+              <button key={k} onClick={() => toggleSort(k)}
+                className={`inline-flex items-center gap-1 rounded-full px-2.5 py-0.5 ${sortKey === k ? "bg-primary text-primary-foreground" : "ring-1 ring-border"}`}>
+                {k === "created_at" ? "created" : k === "token_number" ? "token" : k}
+                {sortKey === k && <ArrowUpDown className="h-3 w-3" />}
+              </button>
+            ))}
+          </span>
+        </div>
       </div>
 
-      {visible.length === 0
-        ? <EmptyState icon={CalendarCheck} text="No appointments here." />
+      {sorted.length === 0
+        ? <div className="mt-6"><EmptyState icon={CalendarCheck} text="No appointments match these filters." /></div>
         : (
-          <div className="space-y-3">
-            {visible.map(a => (
+          <div className="space-y-3 mt-6">
+            {sorted.map(a => (
               <div key={a.id} className="rounded-2xl bg-white ring-1 ring-border p-5">
                 <div className="flex items-start justify-between gap-3 flex-wrap">
                   <div>
-                    <div className="font-semibold text-primary">{a.name} · Age {a.age || "—"}</div>
-                    <div className="text-sm text-muted-foreground">{a.phone} · {a.mode}</div>
+                    <div className="font-semibold text-primary">
+                      {a.name} · Age {a.age || "—"}
+                      {a.token_number != null && <span className="ml-2 inline-flex items-center gap-1 rounded-full bg-emerald-50 text-emerald-700 px-2 py-0.5 text-xs font-bold">#{a.token_number}</span>}
+                    </div>
+                    <div className="text-sm text-muted-foreground">{a.phone}{a.email ? ` · ${a.email}` : ""} · {a.mode}</div>
                     <div className="text-sm text-muted-foreground">{a.date} at {a.slot}</div>
                     <div className="mt-1.5 text-sm text-foreground italic">"{a.concern}"</div>
                   </div>
                   <div className="flex flex-col items-end gap-2">
-                    <span className={`rounded-full px-2.5 py-0.5 text-xs font-semibold ${STATUS_COLOR[a.status]}`}>{a.status}</span>
+                    <select value={a.status}
+                      onChange={e => updateStatus(a.id, e.target.value as Appointment["status"])}
+                      className={`rounded-full border-0 ring-1 ring-border px-2.5 py-1 text-xs font-semibold cursor-pointer ${STATUS_COLOR[a.status] ?? "bg-slate-100 text-slate-600"}`}>
+                      {STATUS_OPTIONS.map(s => <option key={s} value={s}>{s}</option>)}
+                    </select>
                     <span className={`rounded-full px-2.5 py-0.5 text-xs font-semibold ${PAY_COLOR[a.payment_status] ?? "bg-slate-100 text-slate-600"}`}>
                       {PAY_LABEL[a.payment_status] ?? a.payment_status}
                     </span>
@@ -675,33 +782,21 @@ function AppointmentsTab() {
                   </div>
                 )}
 
-                <div className="mt-3 flex gap-2 flex-wrap">
-                  {a.status === "pending" && (
-                    <>
-                      <ActionBtn color="emerald" onClick={() => updateStatus(a.id,"confirmed")} icon={CheckCircle2}>Confirm</ActionBtn>
-                      <ActionBtn color="red" onClick={() => updateStatus(a.id,"cancelled")} icon={XCircle}>Cancel</ActionBtn>
-                    </>
-                  )}
-                  {a.status === "confirmed" && (
-                    <ActionBtn color="red" onClick={() => updateStatus(a.id,"cancelled")} icon={XCircle}>Cancel</ActionBtn>
-                  )}
-                  {a.status === "cancelled" && (
-                    <ActionBtn color="emerald" onClick={() => updateStatus(a.id,"pending")} icon={CheckCircle2}>Reopen</ActionBtn>
-                  )}
-                  {a.payment_status === "pending_verification" && (
-                    <>
-                      <ActionBtn color="emerald" onClick={() => approvePayment(a)} icon={CheckCircle2}>
-                        {busyId === a.id ? "…" : "Approve payment"}
-                      </ActionBtn>
-                      <ActionBtn color="red" onClick={() => openReject(a)} icon={XCircle}>Reject payment</ActionBtn>
-                    </>
-                  )}
-                  {a.payment_status === "verified" && (
+                {a.payment_status === "pending_verification" && (
+                  <div className="mt-3 flex gap-2 flex-wrap">
+                    <ActionBtn color="emerald" onClick={() => approvePayment(a)} icon={CheckCircle2}>
+                      {busyId === a.id ? "…" : "Approve payment"}
+                    </ActionBtn>
+                    <ActionBtn color="red" onClick={() => openReject(a)} icon={XCircle}>Reject payment</ActionBtn>
+                  </div>
+                )}
+                {a.payment_status === "verified" && (
+                  <div className="mt-3">
                     <span className="inline-flex items-center gap-1.5 rounded-lg bg-emerald-50 text-emerald-700 ring-1 ring-emerald-200 px-3 py-1.5 text-xs font-semibold">
                       <CheckCircle2 className="h-3.5 w-3.5" /> Verified — locked
                     </span>
-                  )}
-                </div>
+                  </div>
+                )}
               </div>
             ))}
           </div>
@@ -715,13 +810,9 @@ function AppointmentsTab() {
             <p className="text-sm text-muted-foreground mt-1">
               Tell the patient why their payment couldn't be verified. They will see this on My Appointments.
             </p>
-            <textarea
-              value={rejectReason}
-              onChange={e => setRejectReason(e.target.value)}
-              rows={4}
+            <textarea value={rejectReason} onChange={e => setRejectReason(e.target.value)} rows={4}
               placeholder="e.g. Transaction ID not found in our Razorpay dashboard. Please share a screenshot."
-              className="mt-3 w-full border border-border rounded-xl px-3 py-2.5 text-sm outline-none focus:ring-2 focus:ring-primary/30"
-            />
+              className="mt-3 w-full border border-border rounded-xl px-3 py-2.5 text-sm outline-none focus:ring-2 focus:ring-primary/30" />
             {actionMsg && <p className="mt-2 text-xs text-red-500">{actionMsg}</p>}
             <div className="mt-4 flex gap-2 justify-end">
               <button onClick={() => setRejectFor(null)} className="rounded-lg ring-1 ring-border px-4 py-2 text-sm font-semibold">Cancel</button>
