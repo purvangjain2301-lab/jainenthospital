@@ -361,6 +361,19 @@ export type Database = {
             Args: { _id: string; _method?: string; _reference?: string }
             Returns: undefined
           }
+      reschedule_appointment_by_contact: {
+        Args: {
+          _contact: string
+          _id: string
+          _new_date: string
+          _new_slot: string
+        }
+        Returns: number
+      }
+      reschedule_my_appointment: {
+        Args: { _id: string; _new_date: string; _new_slot: string }
+        Returns: number
+      }
     }
     Enums: {
       app_role: "admin"
