@@ -419,6 +419,107 @@ function PatientDashboard(props: {
           )}
         </div>
       </section>
+      {rescheduleFor && (
+        <RescheduleDialog
+          appt={rescheduleFor}
+          onClose={() => setRescheduleFor(null)}
+          onConfirm={(d, s) => doReschedule(rescheduleFor, d, s)}
+        />
+      )}
     </SiteLayout>
+  );
+}
+
+// ── Reschedule dialog ────────────────────────────────────────────────────────
+function RescheduleDialog({ appt, onClose, onConfirm }: {
+  appt: Appointment;
+  onClose: () => void;
+  onConfirm: (newDate: string, newSlot: string) => void;
+}) {
+  const today = new Date().toISOString().slice(0, 10);
+  const [date, setDate] = useState(appt.date >= today ? appt.date : today);
+  const [slot, setSlot] = useState("");
+  const [slotInfo, setSlotInfo] = useState<{ time_label: string; is_blocked: boolean; booked: number }[]>([]);
+  const [loading, setLoading] = useState(false);
+  const [busy, setBusy] = useState(false);
+
+  useEffect(() => {
+    if (!date) { setSlotInfo([]); return; }
+    let cancelled = false;
+    (async () => {
+      setLoading(true);
+      const [{ data: customSlots }, { data: appts }] = await Promise.all([
+        supabase.from("slots").select("time_label, is_blocked").eq("date", date),
+        supabase.from("appointments").select("slot").eq("date", date).neq("status", "cancelled"),
+      ]);
+      if (cancelled) return;
+      const labels = customSlots && customSlots.length > 0
+        ? customSlots.map((s: any) => s.time_label)
+        : DEFAULT_SLOTS;
+      setSlotInfo(labels.map((label) => {
+        const custom = customSlots?.find((s: any) => s.time_label === label);
+        const booked = (appts ?? []).filter((a: any) => a.slot === label).length;
+        return { time_label: label, is_blocked: custom?.is_blocked ?? false, booked };
+      }));
+      setLoading(false);
+    })();
+    return () => { cancelled = true; };
+  }, [date]);
+
+  return (
+    <div className="fixed inset-0 z-50 bg-black/40 flex items-center justify-center p-4" onClick={onClose}>
+      <div className="bg-white rounded-2xl ring-1 ring-border p-6 w-full max-w-lg shadow-xl max-h-[90vh] overflow-auto" onClick={e => e.stopPropagation()}>
+        <div className="flex items-center gap-2 mb-1">
+          <CalendarClock className="h-5 w-5 text-primary" />
+          <h3 className="font-display text-lg font-bold text-primary">Reschedule appointment</h3>
+        </div>
+        <p className="text-xs text-muted-foreground mb-4">
+          Currently <b>{appt.date}</b> at <b>{appt.slot}</b>. Pick a new date and slot below.
+        </p>
+
+        <label className="text-xs font-semibold text-muted-foreground uppercase tracking-wider">New date</label>
+        <input type="date" value={date} min={today}
+          onChange={e => { setDate(e.target.value); setSlot(""); }}
+          className="mt-1.5 w-full border border-border rounded-xl px-4 py-2.5 text-sm outline-none focus:ring-2 focus:ring-primary/30" />
+
+        <div className="mt-4">
+          <span className="text-xs font-semibold text-muted-foreground uppercase tracking-wider">New slot</span>
+          {loading ? (
+            <p className="text-xs text-muted-foreground mt-2">Loading slot availability…</p>
+          ) : (
+            <div className="mt-2 grid grid-cols-2 sm:grid-cols-3 gap-2">
+              {slotInfo.map(s => {
+                const disabled = s.is_blocked;
+                const selected = slot === s.time_label;
+                return (
+                  <button key={s.time_label} type="button" disabled={disabled}
+                    onClick={() => setSlot(s.time_label)}
+                    className={`rounded-xl border px-3 py-2.5 text-left transition ${
+                      selected ? "border-crimson bg-crimson/5 ring-1 ring-crimson"
+                      : disabled ? "border-border bg-muted/40 opacity-50 cursor-not-allowed"
+                      : "border-border bg-white hover:border-primary"
+                    }`}>
+                    <div className="text-sm font-semibold text-primary">{s.time_label}</div>
+                    <div className="text-[11px] text-muted-foreground flex items-center gap-1">
+                      <Users className="h-3 w-3" />
+                      {s.is_blocked ? "Blocked" : `${s.booked} booked`}
+                    </div>
+                  </button>
+                );
+              })}
+            </div>
+          )}
+        </div>
+
+        <div className="mt-6 flex gap-2 justify-end">
+          <button onClick={onClose} className="rounded-lg ring-1 ring-border px-4 py-2 text-sm font-semibold">Cancel</button>
+          <button disabled={!slot || busy || (date === appt.date && slot === appt.slot)}
+            onClick={async () => { setBusy(true); await onConfirm(date, slot); setBusy(false); }}
+            className="rounded-lg bg-crimson text-crimson-foreground px-5 py-2 text-sm font-semibold disabled:opacity-50">
+            {busy ? "Rescheduling…" : "Confirm reschedule"}
+          </button>
+        </div>
+      </div>
+    </div>
   );
 }
