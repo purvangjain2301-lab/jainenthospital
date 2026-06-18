@@ -4,7 +4,7 @@ import {
   LayoutDashboard, Image as ImageIcon, BookOpen, CalendarCheck, LogOut,
   Plus, Trash2, Eye, EyeOff, Upload, CheckCircle2, XCircle,
   Clock, Users, TrendingUp, FileText, Lock, Mail, ShieldAlert,
-  Settings, MessageSquare,
+  Settings, MessageSquare, Search, Download, ArrowUpDown,
 } from "lucide-react";
 import { supabase, type GalleryItem, type BlogPost, type BlogPostDraft, type Appointment } from "@/lib/supabase";
 import { ContentTab } from "@/components/admin/ContentTab";
