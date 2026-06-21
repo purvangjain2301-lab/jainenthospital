@@ -1,0 +1,7 @@
+User-agent: *
+Allow: /
+
+Disallow: /admin
+Disallow: /my-appointments
+
+Sitemap: https://jainent.lovable.app/sitemap.xml
