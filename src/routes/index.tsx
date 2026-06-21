@@ -39,20 +39,20 @@ function HomePage() {
         <div className="container-tight pt-12 md:pt-20 pb-16 md:pb-24 grid lg:grid-cols-12 gap-10 items-center">
           <div className="lg:col-span-7">
             <motion.div
-              initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.5 }}
+              initial={false} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.5 }}
               className="inline-flex items-center gap-2 rounded-full bg-white/70 ring-1 ring-border px-3 py-1 text-xs font-semibold uppercase tracking-wider text-primary"
             >
               <Sparkles className="h-3.5 w-3.5 text-crimson" />
               ENT & Head Neck Surgeon with Cancer Care · 18+ years of experience · Worldwide Telemedicine
             </motion.div>
             <motion.h1
-              initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6, delay: 0.05 }}
+              initial={false} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6, delay: 0.05 }}
               className="mt-5 font-display text-4xl sm:text-5xl lg:text-6xl font-bold text-primary text-balance leading-[1.05]"
             >
               <span className="text-crimson">ENT Surgeries</span> + Face Surgeries + Cancer Care
             </motion.h1>
             <motion.p
-              initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6, delay: 0.1 }}
+              initial={false} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6, delay: 0.1 }}
               className="mt-5 max-w-xl text-base md:text-lg text-muted-foreground text-pretty"
             >
               Led by <strong className="text-foreground">{CLINIC.doctor.name}</strong>, MBBS, MS (ENT) —
@@ -60,7 +60,7 @@ function HomePage() {
               patients across India and worldwide.
             </motion.p>
             <motion.div
-              initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6, delay: 0.15 }}
+              initial={false} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6, delay: 0.15 }}
               className="mt-7 flex flex-wrap gap-3"
             >
               <Link to="/book"
@@ -87,7 +87,7 @@ function HomePage() {
           </div>
 
           <motion.div
-            initial={{ opacity: 0, scale: 0.95 }} animate={{ opacity: 1, scale: 1 }} transition={{ duration: 0.7 }}
+            initial={false} animate={{ opacity: 1, scale: 1 }} transition={{ duration: 0.7 }}
             className="lg:col-span-5"
           >
             <div className="relative mx-auto max-w-md">
@@ -145,7 +145,7 @@ function HomePage() {
           <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-5">
             {SERVICES.map((s, i) => (
               <motion.div key={s.title}
-                initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }}
+                initial={false} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }}
                 transition={{ duration: 0.4, delay: i * 0.06 }}
                 className="group relative rounded-2xl bg-white ring-1 ring-border p-6 hover:ring-primary hover:shadow-soft transition">
                 <div className="inline-flex h-12 w-12 items-center justify-center rounded-xl bg-primary/10 text-primary group-hover:bg-crimson group-hover:text-crimson-foreground transition">
