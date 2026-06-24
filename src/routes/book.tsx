@@ -270,11 +270,17 @@ function Book() {
                     </div>
                   </div>
                 )}
+             {form.date && (
+  <div>
+    <span className="text-sm font-medium text-foreground">Preferred slot <span className="text-crimson">*</span></span>
+    
+    {/* Please Note */}
+    <p className="mt-2 text-xs text-amber-800 bg-amber-50 border border-amber-200 rounded-xl p-3 leading-relaxed">
+      <strong>Please Note:</strong> The booking numbers shown below reflect only online reservations made at this moment. They do not include walk-ins or offline appointments booked directly at the clinic desk.
+    </p>
 
-                {form.date && (
-                  <div>
-                    <span className="text-sm font-medium text-foreground">Preferred slot <span className="text-crimson">*</span></span>
-                    {loadingSlots ? (
+    {loadingSlots ? (
+    
                       <p className="text-xs text-muted-foreground mt-2">Loading slot availability…</p>
                     ) : (
                       <div className="mt-2 grid grid-cols-2 sm:grid-cols-3 gap-2">
